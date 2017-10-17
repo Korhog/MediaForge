@@ -6,35 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sequence ="using:Sequence.UI"
-    mc:Ignorable="d">
+    mc:Ignorable="d"   
+    Background="#0F0F0F"
+    >
 
-    <Grid Background="#2D2D2D" Margin="0,0,0,0">
-        <ScrollViewer VerticalAlignment="Bottom" Margin="1" Visibility="Visible" >
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ItemsControl x:Name="Options" Margin="0, 20, 0,0">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Height="100" Margin="1" Background="MediumVioletRed"/>
+    <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>    
-                </ItemsControl>
-                <ScrollViewer
-                    Grid.Column="1"
-                    HorizontalScrollMode="Enabled"
-                    VerticalScrollMode="Disabled"
-                    HorizontalScrollBarVisibility="Auto" >
-                    <StackPanel Padding="0, 20, 0, 0">
-                        <sequence:SequenceControl VerticalAlignment="Top"/>
-                        <sequence:SequenceControl VerticalAlignment="Top"/>
-                    </StackPanel>
-                </ScrollViewer>
-            </Grid>
-        </ScrollViewer>  
+        <sequence:Sequensor 
+            x:Name="Sequensor" VerticalAlignment="Bottom"/>
     </Grid>
 </Page>

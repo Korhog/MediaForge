@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Sequence
 {
+    using System;
     using UI;
 
     public enum TransformationTarget
@@ -19,7 +20,10 @@ namespace Sequence
     /// </summary>    
     public class SequenceBaseItem
     {
-        TransformationTarget m_target = TransformationTarget.Center;        
+        TransformationTarget m_target = TransformationTarget.Center;
+
+        TimeSpan m_lenght; // продолжительность
+        TimeSpan m_start;  // время начала
 
         protected SequenceBase m_parent;
         protected FrameContainer m_border;
@@ -40,10 +44,9 @@ namespace Sequence
             m_border = new FrameContainer()
             {
                 BorderThickness = new Thickness(4, 0, 4, 0),
-                BorderBrush = new SolidColorBrush(Colors.DarkCyan),
                 MinHeight = 50,
-                MinWidth = 10,
-                Background = new SolidColorBrush(Colors.DarkCyan),                
+                MinWidth = 10,  
+                AccentColor = parent.AccentColor
             };
 
             m_border.PointerPressed += OnPointerPressed;

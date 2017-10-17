@@ -25,7 +25,7 @@ namespace MediaForge
         public MainPage()
         {
             this.InitializeComponent();
-            Options.ItemsSource = new int[] { 1, 2 };
+            Sequensor.Controller.Sequences.Add(new Sequence.SequenceBase());
         }
     }
 }

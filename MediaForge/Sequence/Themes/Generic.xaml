@@ -7,62 +7,67 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SequenceControl">
-                    <Border                        
-                        MinHeight="100"                        
-                        x:Name="Border"
-                        Margin="1"
-                        AllowDrop="True"
-                        Background="#1D1D1D" >
-                        <ListView 
+                    <Grid Margin="0, 0, 0, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border 
+                            x:Name="Border"
+                            Height="100"
+                            Margin="1"
+                            AllowDrop="True"
+                            Background="#1D1D1D" >
+                            <ListView 
                             x:Name="Items" 
                             AllowDrop="True"
                             ReorderMode="Enabled"
                             CanReorderItems="False"
                             Margin="0, -20, 0, 0"
                             HorizontalAlignment="Stretch" >
-                            <ListView.ItemContainerStyle>                                
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="MinWidth" Value="1"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>                                            
-                                            <ControlTemplate TargetType="ListViewItem">                                                
-                                                <Border Padding="0, 20,0,0" >
-                                                    <ContentPresenter/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>                                    
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="MinWidth" Value="1"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListViewItem">
+                                                    <Border Padding="0, 20, 0, 0" >
+                                                        <ContentPresenter/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
 
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <ContentControl Content="{Binding Template}"/>
-                                    </Grid>                                    
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
 
-                            <ItemsPresenter/>
-                        </ListView>
-                    </Border>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <ContentControl Content="{Binding Template}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                                <ItemsPresenter />
+                            </ListView>
+                        </Border>
+                    </Grid>                    
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     
-
     <Style TargetType="local:FrameContainer">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:FrameContainer">
-                    <Grid Margin="1, -20, 0, 0">
+                    <Grid Margin="0, -20, 0, 0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20"/>
                             <RowDefinition/>
@@ -74,12 +79,175 @@
                             <TextBlock Text="00:00:05.00" FontSize="11" Foreground="Wheat" FontWeight="Bold"/>       
                         </Border>  
                         <Border 
-                            Grid.Row="1"
-                            Background="Green"
+                            Grid.Row="1"                            
                             Padding="4,0,4,0">
-                            <ContentPresenter Content="{TemplateBinding Content}"/>
+                            <Border.Background>
+                                <AcrylicBrush
+                                    TintColor="{TemplateBinding AccentColor}"
+                                    FallbackColor="{TemplateBinding AccentColor}"
+                                    TintOpacity="0.5"
+                                    BackgroundSource="Backdrop" />
+                            </Border.Background>
+                            <ContentPresenter Content="{TemplateBinding Content}"/>                              
                         </Border>
                     </Grid>  
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="local:TimeScaleControl">          
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>                    
+                    <Border Height="40" Background="#1d1d1d">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="Rectangle">
+                                    
+                                </Style>
+                                <Style TargetType="Line">
+                                    <Setter Property="StrokeThickness" Value="1"/>
+                                    <Setter Property="Margin" Value="0, 0, 10, 0"/>
+                                    <Setter Property="Stroke" Value="White"/>
+                                    <Setter Property="VerticalAlignment" Value="Bottom"/>
+                                    <Setter Property="IsHitTestVisible" Value="False"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock 
+                                Text="00:00:00:00" 
+                                TextAlignment="Center"
+                                Foreground="Gray" 
+                                Width="100" 
+                                Margin="-50, 0, -50, 0"/>
+                            <Line X1="0" X2="0" Y1="0" Y2="20" />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="10" />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <Style TargetType="local:Sequensor">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:Sequensor">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <ScrollViewer 
+                                Margin="122, 0, 42, 42"
+                                Visibility="Visible"
+                                VerticalAlignment="Top"
+                                x:Name="TimeScaleScroll"  
+                                VerticalScrollMode="Disabled" 
+                                HorizontalScrollMode="Enabled" 
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility="Disabled" >
+                                <local:TimeScaleControl 
+                                    x:Name="TimeScale" 
+                                    Height="40" />
+                            </ScrollViewer>
+                            <Button Width="120" x:Name="Add" VerticalAlignment="Top" Background="GreenYellow">Add Sequence</Button>
+
+                            <ScrollViewer Margin="1, 21, 1, 1" VerticalScrollBarVisibility="Hidden" >
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ItemsControl x:Name="SequenceOptions" Margin="0, 20, 0, 0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Height="100" Margin="1" Background="#0d1d1d"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    
+                                    <ScrollViewer
+                                        Grid.Column="1"
+                                        HorizontalScrollMode="Enabled"
+                                        VerticalScrollMode="Disabled"
+                                        HorizontalScrollBarVisibility="Hidden"
+                                        VerticalScrollBarVisibility="Disabled" >
+                                        <ItemsControl x:Name="Sequences" Padding="0, 40, 0, 0" Margin="0,20,0,0">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <local:SequenceControl />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+
+                                    <ItemsControl Grid.Column="2" x:Name="SequenceControls" Margin="0, 20, 0, 0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Height="100" Margin="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition />
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <Grid.Resources>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                                            <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                            <Setter Property="FontSize" Value="8"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate>
+                                                                        <Border Padding="4" Background="#1d1d1d">
+                                                                            <ContentPresenter/>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </Grid.Resources>
+
+                                                    <Button x:Name="UpButton" Grid.Row="0" >
+                                                        <FontIcon Glyph="&#xE010;" ></FontIcon>
+                                                    </Button>
+
+                                                    <Button x:Name="DeleteButton" Grid.Row="1" Margin="0, 2, 0, 2">
+                                                        <FontIcon Glyph="&#xE107;" ></FontIcon>
+                                                    </Button>
+
+                                                    <Button  x:Name="DownButton" Grid.Row="2">
+                                                        <FontIcon Glyph="&#xE011;" ></FontIcon>
+                                                    </Button>                                                    
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>                                
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

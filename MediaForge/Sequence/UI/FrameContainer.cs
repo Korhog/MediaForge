@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -14,7 +15,7 @@ using Windows.UI.Xaml.Media;
 namespace Sequence.UI
 {
     public sealed class FrameContainer : Control
-    { 
+    {
         public FrameContainer()
         {
             this.DefaultStyleKey = typeof(FrameContainer);
@@ -31,6 +32,19 @@ namespace Sequence.UI
         {
             get { return (UIElement)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty AccentColorProperty = DependencyProperty.Register(
+            "AccentColor",
+            typeof(Color),
+            typeof(FrameContainer),
+            new PropertyMetadata(null)
+        );
+
+        public Color AccentColor
+        {
+            get { return (Color)GetValue(AccentColorProperty); }
+            set { SetValue(AccentColorProperty, value); }
         }
     }
 }

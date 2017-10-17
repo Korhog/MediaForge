@@ -28,17 +28,18 @@ namespace Sequence.UI
         public SequenceControl()
         {
             this.DefaultStyleKey = typeof(SequenceControl);
-            m_inner_sequence = new SequenceBase();
         }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            m_inner_sequence = DataContext as SequenceBase;
 
             m_items = GetTemplateChild("Items") as ItemsControl;
             m_items.ItemsSource = m_inner_sequence.Items;
 
             m_border = GetTemplateChild("Border") as Border;
+
             m_border.DragOver += OnDropOver;
             m_border.Drop += OnDrop;
             m_border.PointerMoved += OnPointerMoved;

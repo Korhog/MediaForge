@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 using System.Collections.ObjectModel;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml;
 
 namespace Sequence
 {
@@ -18,6 +20,8 @@ namespace Sequence
 
     public class SequenceBase
     {
+        public Color AccentColor { get; set; }
+
         protected Point m_begin_position;
         protected SequenceBaseItem m_drag_item;
         public SequenceBaseItem DragItem { get { return m_drag_item; } }
@@ -27,6 +31,15 @@ namespace Sequence
 
         public SequenceBase()
         {
+            Random rand = new Random();
+
+            AccentColor = ColorHelper.FromArgb(
+                255,
+                (byte)rand.Next(100, 200),
+                (byte)rand.Next(100, 200),
+                (byte)rand.Next(100, 200)
+            );
+
             m_items = new ObservableCollection<SequenceBaseItem>();
         }
 

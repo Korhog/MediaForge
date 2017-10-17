@@ -107,11 +107,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sequence\SequenceControllerBase.cs" />
     <Compile Include="Sequence\Media\SequenceImage.cs" />
     <Compile Include="UI\FrameContainer.cs" />
     <Compile Include="UI\SequenceControl.cs" />
     <Compile Include="Sequence\SequenceBase.cs" />
     <Compile Include="Sequence\SequenceBaseItem.cs" />
+    <Compile Include="UI\Sequensor.cs" />
+    <Compile Include="UI\TimeScaleControl.cs" />
     <EmbeddedResource Include="Properties\Sequence.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +126,11 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\TimeScale.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
