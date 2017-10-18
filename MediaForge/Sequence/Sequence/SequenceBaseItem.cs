@@ -22,6 +22,7 @@ namespace Sequence
 
     public class SequenceBaseItem
     {
+        bool m_reset = true;
         TransformationTarget m_target = TransformationTarget.Center;
 
         protected TimeSpan m_duration; // Продолжительность
@@ -81,6 +82,7 @@ namespace Sequence
 
         protected void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            m_reset = true;
             var pointer = e.GetCurrentPoint(m_border);
 
             if (pointer.Position.X < 10)
@@ -107,11 +109,17 @@ namespace Sequence
         {
             m_parent.SetDragItem(null, e);
             Template.DurationVisibility = Visibility.Collapsed;
-            Template.TimeShiftVisibility = Visibility.Collapsed;
+            Template.TimeShiftVisibility = Visibility.Collapsed;            
         }
 
         public void Translate(double delta)
         {
+            if (m_reset)
+            {
+                m_reset = false;
+                return;
+            }
+
             switch (m_target)
             {
                 case TransformationTarget.Center:

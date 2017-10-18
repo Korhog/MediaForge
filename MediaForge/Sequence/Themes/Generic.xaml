@@ -98,7 +98,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SequenceControl">
-                    <Grid Margin="0, 0, 0, 0">
+                    <Grid Margin="0, 0, 0, 0" ManipulationMode="System">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto"/>
@@ -155,6 +155,7 @@
     </Style>
     
     <Style TargetType="local:FrameContainer">
+        <Setter Property="ManipulationMode" Value="TranslateX"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:FrameContainer">

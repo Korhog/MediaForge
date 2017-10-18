@@ -44,6 +44,7 @@ namespace Sequence.UI
             m_border.Drop += OnDrop;
             m_border.PointerMoved += OnPointerMoved;
             m_border.PointerExited += OnPointerExited;
+            m_border.PointerPressed += OnPointerPressed;
         }
 
         private void OnDropOver(object sender, DragEventArgs e)
@@ -64,6 +65,10 @@ namespace Sequence.UI
                     m_inner_sequence.Add(new SequenceImage(m_inner_sequence, bitmapImage));
                 }
             }
+            else
+            {
+                 m_inner_sequence.Add(new SequenceBaseItem(m_inner_sequence)); 
+            }            
         }
 
         private void OnPointerMoved (object sender, PointerRoutedEventArgs e) {
