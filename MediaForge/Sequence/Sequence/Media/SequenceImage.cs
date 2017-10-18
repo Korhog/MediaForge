@@ -26,16 +26,11 @@ namespace Sequence
             {
                 Height = 100,
                 Source = m_source
-            };           
-                        
-
-            m_image = new Image()
-            {
+            };          
+            
+            m_image = new Image() {                
                 Source = m_source
             };
-            m_image.RenderTransform = new RotateTransform();
-            ( m_image.RenderTransform as RotateTransform ).Angle = 30;
-
 
             Template.Content = image;
         }
