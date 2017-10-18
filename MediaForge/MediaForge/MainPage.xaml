@@ -9,7 +9,6 @@
     mc:Ignorable="d"   
     Background="#0F0F0F"
     >
-
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -17,15 +16,15 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Width="800" Height="600">
+        <Grid Width="800" Height="600" >
             <Canvas x:Name="canvas"/>
         </Grid>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2">
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2" >
             <Button Content="Start" Click="OnStart" Margin="2"/>
             <Button Content="Start" Click="OnStart" Margin="2"/>
             <Button Content="Start" Click="OnStart" Margin="2"/>
         </StackPanel>
-        <sequence:Sequensor x:Name="Sequensor" VerticalAlignment="Bottom" Grid.Row="2"/>
+        <sequence:Sequensor x:Name="Sequensor" VerticalAlignment="Bottom" Grid.Row="2" />
     </Grid>
 </Page>
