@@ -61,8 +61,7 @@ namespace Sequence.UI
                     var storageFile = items[0] as StorageFile;
                     var bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(await storageFile.OpenAsync(FileAccessMode.Read));
-
-                    m_inner_sequence.Items.Add(new SequenceImage(m_inner_sequence, bitmapImage));
+                    m_inner_sequence.Add(new SequenceImage(m_inner_sequence, bitmapImage));
                 }
             }
         }

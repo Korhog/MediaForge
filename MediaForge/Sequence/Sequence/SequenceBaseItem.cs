@@ -17,13 +17,39 @@ namespace Sequence
     }
     /// <summary>
     /// Базовый класс элемента последовательности.
-    /// </summary>    
+    /// </summary>  
+
+
     public class SequenceBaseItem
     {
         TransformationTarget m_target = TransformationTarget.Center;
 
-        TimeSpan m_lenght; // продолжительность
-        TimeSpan m_start;  // время начала
+        protected TimeSpan m_duration; // Продолжительность
+        public TimeSpan Duration {
+            get { return m_duration; }
+            set { SetDuration(value); }
+        }
+
+        protected virtual void SetDuration(TimeSpan duration)
+        {
+            m_duration = duration;
+            // Template.Width = m_parent.TimeSpanToDouble(m_duration);
+            Template.Duration = string.Format(@"{0:hh\:mm\:ss\:ff}", Duration); 
+        }
+
+        protected TimeSpan m_time_shift; // смещение
+        public TimeSpan TimeShift
+        {
+            get { return m_time_shift; }
+            set { SetTimeShift(value); }
+        }
+
+        protected virtual void SetTimeShift(TimeSpan duration)
+        {
+            m_time_shift = duration;
+            // Template.Width = m_parent.TimeSpanToDouble(m_duration);
+            Template.TimeShift = string.Format(@"{0:hh\:mm\:ss\:ff}", TimeShift);
+        }
 
         protected SequenceBase m_parent;
         protected FrameContainer m_border;
@@ -55,29 +81,37 @@ namespace Sequence
 
         protected void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            var pointer = e.GetCurrentPoint(m_border);           
+            var pointer = e.GetCurrentPoint(m_border);
 
             if (pointer.Position.X < 10)
+            {
                 m_target = TransformationTarget.LeftEdge;
+                Template.DurationVisibility = Visibility.Visible;
+            }
             else if (pointer.Position.X > Template.ActualWidth - 10)
+            {
                 m_target = TransformationTarget.RightEdge;
-            else m_target = TransformationTarget.Center;
+                Template.DurationVisibility = Visibility.Visible;
+            }
+            else
+            {
+                m_target = TransformationTarget.Center;
+                Template.TimeShiftVisibility = Visibility.Visible;
+            }
 
             Template.Width = Template.ActualWidth;                
             m_parent.SetDragItem(this);
-
-            Duration d = new Duration(new System.TimeSpan(0, 0, 5));
-            var r = d.TimeSpan.Seconds;
         }
 
         protected void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             m_parent.SetDragItem(null, e);
+            Template.DurationVisibility = Visibility.Collapsed;
+            Template.TimeShiftVisibility = Visibility.Collapsed;
         }
 
         public void Translate(double delta)
         {
-
             switch (m_target)
             {
                 case TransformationTarget.Center:
@@ -93,8 +127,11 @@ namespace Sequence
                     break;
                 case TransformationTarget.RightEdge:
                     Template.Width += delta;
-                    break;
-            } 
+                    break;                
+            }
+
+            Duration = m_parent.DoubleToTimeSpan(Template.ActualWidth);
+            TimeShift = m_parent.DoubleToTimeSpan(m_offset);
         }
     }
 }

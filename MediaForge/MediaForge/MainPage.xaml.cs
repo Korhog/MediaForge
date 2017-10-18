@@ -25,7 +25,19 @@ namespace MediaForge
         public MainPage()
         {
             this.InitializeComponent();
-            Sequensor.Controller.Sequences.Add(new Sequence.SequenceBase());
+            Sequensor.Controller.Create();
+            Sequensor.Controller.AddItem += (sender, o) =>
+            {
+                var img = o as Sequence.SequenceImage;
+                if (img == null) return;
+                
+                canvas.Children.Add(img.Image);
+            };
+        }
+
+        private void OnStart(object sender, RoutedEventArgs e)
+        {
+            Sequensor.Play();
         }
     }
 }

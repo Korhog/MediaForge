@@ -19,12 +19,12 @@
                             AllowDrop="True"
                             Background="#1D1D1D" >
                             <ListView 
-                            x:Name="Items" 
-                            AllowDrop="True"
-                            ReorderMode="Enabled"
-                            CanReorderItems="False"
-                            Margin="0, -20, 0, 0"
-                            HorizontalAlignment="Stretch" >
+                                x:Name="Items" 
+                                AllowDrop="True"
+                                CanReorderItems="False"
+                                Margin="0, -20, 0, 0"
+                                HorizontalAlignment="Stretch"                                 
+                                >
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="MinWidth" Value="1"/>
@@ -52,7 +52,8 @@
                                             <ContentControl Content="{Binding Template}"/>
                                         </Grid>
                                     </DataTemplate>
-                                </ListView.ItemTemplate>
+                                </ListView.ItemTemplate>                               
+                                
 
                                 <ItemsPresenter />
                             </ListView>
@@ -72,19 +73,21 @@
                             <RowDefinition Height="20"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Border HorizontalAlignment="Left" Background="DarkGreen" Padding="2" CornerRadius="2,2,0,0">
-                            <TextBlock Text="00:00:05.00" FontSize="11" Foreground="Wheat" FontWeight="Bold"/>
+                        <Border HorizontalAlignment="Left" Background="MediumOrchid" Padding="2" CornerRadius="2,2,0,0" 
+                                Visibility="{TemplateBinding TimeShiftVisibility}">
+                            <TextBlock Text="{TemplateBinding TimeShift}" FontSize="11" Foreground="Wheat" FontWeight="Bold"/>
                         </Border>
-                        <Border HorizontalAlignment="Right" Background="DarkGreen" Padding="2" CornerRadius="2,2,0,0">
-                            <TextBlock Text="00:00:05.00" FontSize="11" Foreground="Wheat" FontWeight="Bold"/>       
+                        <Border HorizontalAlignment="Right" Background="MediumOrchid" Padding="2" CornerRadius="2,2,0,0"
+                                Visibility="{TemplateBinding DurationVisibility}">
+                            <TextBlock Text="{TemplateBinding Duration}" FontSize="11" Foreground="Wheat" FontWeight="Bold"/>       
                         </Border>  
                         <Border 
                             Grid.Row="1"                            
                             Padding="4,0,4,0">
                             <Border.Background>
                                 <AcrylicBrush
-                                    TintColor="{TemplateBinding AccentColor}"
-                                    FallbackColor="{TemplateBinding AccentColor}"
+                                    TintColor="MediumOrchid"
+                                    FallbackColor="MediumOrchid"
                                     TintOpacity="0.5"
                                     BackgroundSource="Backdrop" />
                             </Border.Background>
@@ -96,7 +99,8 @@
         </Setter>
     </Style>
     
-    <Style TargetType="local:TimeScaleControl">          
+    <Style TargetType="local:TimeScaleControl">        
+        
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -104,46 +108,45 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-
+        
         <Setter Property="ItemTemplate">
             <Setter.Value>
-                <DataTemplate>                    
+                <DataTemplate >                    
                     <Border Height="40" Background="#1d1d1d">
                         <StackPanel Orientation="Horizontal">
                             <StackPanel.Resources>
                                 <Style TargetType="Rectangle">
-                                    
-                                </Style>
-                                <Style TargetType="Line">
-                                    <Setter Property="StrokeThickness" Value="1"/>
-                                    <Setter Property="Margin" Value="0, 0, 10, 0"/>
-                                    <Setter Property="Stroke" Value="White"/>
+                                    <Setter Property="Fill" Value="Gray"/>
+                                    <Setter Property="Margin" Value="0, 0, 9, 0"/>
+                                    <Setter Property="Width" Value="1"/>
                                     <Setter Property="VerticalAlignment" Value="Bottom"/>
-                                    <Setter Property="IsHitTestVisible" Value="False"/>
+                                    <Setter Property="IsHitTestVisible" Value="False"/>                                    
                                 </Style>
                             </StackPanel.Resources>
                             <TextBlock 
-                                Text="00:00:00:00" 
+                                FontSize="12"
+                                Text="{Binding TimeString}" 
                                 TextAlignment="Center"
                                 Foreground="Gray" 
                                 Width="100" 
                                 Margin="-50, 0, -50, 0"/>
-                            <Line X1="0" X2="0" Y1="0" Y2="20" />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="10" />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
-                            <Line X1="0" X2="0" Y1="0" Y2="5"  />
+                            
+                            <Rectangle Height="20"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="10"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="5"/>
+                            <Rectangle Height="5"/>
+
                         </StackPanel>
                     </Border>
                 </DataTemplate>
             </Setter.Value>
         </Setter>
-
     </Style>
 
     <Style TargetType="local:Sequensor">
@@ -156,17 +159,20 @@
                         BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <ScrollViewer 
-                                Margin="122, 0, 42, 42"
-                                Visibility="Visible"
-                                VerticalAlignment="Top"
-                                x:Name="TimeScaleScroll"  
-                                VerticalScrollMode="Disabled" 
-                                HorizontalScrollMode="Enabled" 
-                                HorizontalScrollBarVisibility="Hidden"
-                                VerticalScrollBarVisibility="Disabled" >
-                                <local:TimeScaleControl 
-                                    x:Name="TimeScale" 
-                                    Height="40" />
+                                    Margin="122, -20, 42, 42"                                
+                                    Visibility="Visible"
+                                    VerticalAlignment="Top"
+                                    x:Name="TimeScaleScroll"  
+                                    VerticalScrollMode="Disabled" 
+                                    HorizontalScrollMode="Enabled" 
+                                    HorizontalScrollBarVisibility="Hidden"
+                                    VerticalScrollBarVisibility="Disabled" >
+                                <Grid Padding="0, 20, 0, 0" >
+                                    <local:TimeScaleControl 
+                                        x:Name="TimeScale" 
+                                        Height="40" />
+                                    <Slider MaxWidth="1200" Maximum="600" Value="0" StepFrequency="1" x:Name="Slider" Margin="0, -20, 0, 0" />
+                                </Grid>
                             </ScrollViewer>
                             <Button Width="120" x:Name="Add" VerticalAlignment="Top" Background="GreenYellow">Add Sequence</Button>
 
@@ -187,11 +193,12 @@
                                     </ItemsControl>
                                     
                                     <ScrollViewer
-                                        Grid.Column="1"
-                                        HorizontalScrollMode="Enabled"
-                                        VerticalScrollMode="Disabled"
-                                        HorizontalScrollBarVisibility="Hidden"
-                                        VerticalScrollBarVisibility="Disabled" >
+                                            x:Name="SequencesScroll"
+                                            Grid.Column="1"
+                                            HorizontalScrollMode="Enabled"
+                                            VerticalScrollMode="Disabled"
+                                            HorizontalScrollBarVisibility="Hidden"
+                                            VerticalScrollBarVisibility="Disabled" >
                                         <ItemsControl x:Name="Sequences" Padding="0, 40, 0, 0" Margin="0,20,0,0">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>

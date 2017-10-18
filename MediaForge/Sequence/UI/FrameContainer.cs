@@ -46,5 +46,57 @@ namespace Sequence.UI
             get { return (Color)GetValue(AccentColorProperty); }
             set { SetValue(AccentColorProperty, value); }
         }
+
+        public static readonly DependencyProperty DurationProperty = DependencyProperty.Register(
+            "Duration",
+            typeof(string),
+            typeof(FrameContainer),
+            new PropertyMetadata("00:00:00:0000")
+        );
+
+        public string Duration
+        {
+            get { return (string)GetValue(DurationProperty); }
+            set { SetValue(DurationProperty, value); }
+        }
+
+        public static readonly DependencyProperty DurationVisibilityProperty = DependencyProperty.Register(
+            "DurationVisibility",
+            typeof(Visibility),
+            typeof(FrameContainer),
+            new PropertyMetadata(Visibility.Collapsed)
+        );
+
+        public Visibility DurationVisibility
+        {
+            get { return (Visibility)GetValue(DurationVisibilityProperty); }
+            set { SetValue(DurationVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty TimeShiftProperty = DependencyProperty.Register(
+            "TimeShift",
+            typeof(string),
+            typeof(FrameContainer),
+            new PropertyMetadata("00:00:00:0000")
+        );
+
+        public string TimeShift
+        {
+            get { return (string)GetValue(TimeShiftProperty); }
+            set { SetValue(TimeShiftProperty, value); }
+        }
+
+        public static readonly DependencyProperty TimeShiftVisibilityProperty = DependencyProperty.Register(
+            "TimeShiftVisibility",
+            typeof(Visibility),
+            typeof(FrameContainer),
+            new PropertyMetadata(Visibility.Collapsed)
+        );
+
+        public Visibility TimeShiftVisibility
+        {
+            get { return (Visibility)GetValue(TimeShiftVisibilityProperty); }
+            set { SetValue(TimeShiftVisibilityProperty, value); }
+        }
     }
 }
