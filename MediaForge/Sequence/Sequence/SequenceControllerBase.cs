@@ -131,10 +131,10 @@ namespace Sequence
             if (m_sequences.Count == 0 || m_sequences[0].Items.Count == 0)
                 return;
 
-            var time = new TimeSpan((long)m_slider.Value / 30 * 10000000);
+            var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
             var targetItem = m_sequences[0].Items[0] as SequenceImage;
 
-            bool vis = time > targetItem.TimeShift && time < targetItem.TimeShift + targetItem.Duration;
+            bool vis = time >= targetItem.TimeShift && time < targetItem.TimeShift + targetItem.Duration;
             targetItem.Image.Visibility = vis ? Visibility.Visible : Visibility.Collapsed;
         }
 
