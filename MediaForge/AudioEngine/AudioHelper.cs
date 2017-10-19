@@ -14,7 +14,7 @@ namespace AudioEngine
 {
     public class AudioHelper
     {
-        private StorageFile currentFile;
+        public StorageFile currentFile;
 
         // private PlottingGraphImg imgFile;
 

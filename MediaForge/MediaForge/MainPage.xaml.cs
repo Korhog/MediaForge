@@ -19,6 +19,8 @@ namespace MediaForge
 {
     using Sequence.UI;
     using AudioEngine;
+    using Windows.Storage.Pickers;
+
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
@@ -50,6 +52,22 @@ namespace MediaForge
         private async void OnWave(object sender, RoutedEventArgs e)
         {
             await wave.ChooseFile_Click(sender, e);
+
+            Wav wavFile = new Wav(wave.currentFile.Path.ToString());
+            var imgFile = new PlottingGraphImg(wavFile, 1000, 100);
+            FileSavePicker fileSavePicker = new FileSavePicker();
+            fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+            fileSavePicker.SuggestedFileName = "image";
+
+            var outputFile = await fileSavePicker.PickSaveFileAsync();
+            if (outputFile == null)
+            {
+                // The user cancelled the picking operation
+                return;
+            }
+            await imgFile.SaveGraphicFile(outputFile);
+
         }
     }
 }
