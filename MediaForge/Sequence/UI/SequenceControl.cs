@@ -42,9 +42,6 @@ namespace Sequence.UI
 
             m_border.DragOver += OnDropOver;
             m_border.Drop += OnDrop;
-            m_border.PointerMoved += OnPointerMoved;
-            m_border.PointerExited += OnPointerExited;
-            m_border.PointerPressed += OnPointerPressed;
         }
 
         private void OnDropOver(object sender, DragEventArgs e)
@@ -85,23 +82,6 @@ namespace Sequence.UI
                     Duration = new TimeSpan(0, 0, 2)
                 }); 
             }            
-        }
-
-        private void OnPointerMoved (object sender, PointerRoutedEventArgs e) {
-            var pointer = e.GetCurrentPoint(m_border);
-            m_inner_sequence.DragItem?.Translate(pointer.Position.X - m_begin.X);
-            m_begin = pointer.Position;
-        }
-
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var pointer = e.GetCurrentPoint(m_border);
-            m_begin = pointer.Position;
-        }
-
-        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            m_inner_sequence.SetDragItem(null);
         }
     }
 }

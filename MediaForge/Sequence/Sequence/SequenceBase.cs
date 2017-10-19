@@ -26,7 +26,6 @@ namespace Sequence
         public delegate void SequenceItemAdded(SequenceBase sender, SequenceBaseItem item);
         public event SequenceItemAdded AddItem;
 
-        protected Point m_begin_position;
         protected SequenceBaseItem m_drag_item;
         public SequenceBaseItem DragItem { get { return m_drag_item; } }
 

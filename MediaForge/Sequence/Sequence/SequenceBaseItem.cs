@@ -17,14 +17,12 @@ namespace Sequence
         LeftEdge,
         RightEdge
     }
+
     /// <summary>
     /// Базовый класс элемента последовательности.
     /// </summary>  
-
-
     public class SequenceBaseItem
     {
-        bool m_reset = true;
         TransformationTarget m_target = TransformationTarget.Center;
 
         protected TimeSpan m_duration; // Продолжительность
@@ -58,6 +56,9 @@ namespace Sequence
             Template.TimeShift = string.Format(@"{0:hh\:mm\:ss\:ff}", TimeShift);
         }
 
+        public delegate void SequenceItemCommit(SequenceBaseItem sender);
+        public event SequenceItemCommit Commit;
+
         protected SequenceBase m_parent;
         protected FrameContainer m_border;
         public FrameContainer Template { get { return m_border; } }  
@@ -76,81 +77,85 @@ namespace Sequence
 
             m_border = new FrameContainer()
             {
+                ManipulationMode = ManipulationModes.TranslateX,
                 BorderThickness = new Thickness(4, 0, 4, 0),
                 MinHeight = 50,
                 MinWidth = 10,  
                 AccentColor = parent.AccentColor
             };
 
-            m_border.PointerPressed += OnPointerPressed;
-            m_border.PointerReleased += OnPointerReleased;
+            m_border.ManipulationStarted += OnManipulationStarted;
+            m_border.ManipulationDelta += OnManipulationDelta;
+            m_border.ManipulationCompleted += OnManipulationCompleted;
         }
 
-        protected void OnPointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            m_reset = true;
-            var pointer = e.GetCurrentPoint(m_border);
+        // Манипуляции        
+        private double m_begin_shift;
+        private double m_begin_width;
+        private double m_begin_position;
+        private double m_current_position;
 
-            if (pointer.Position.X < 10)
-            {
-                m_target = TransformationTarget.LeftEdge;
-                Template.DurationVisibility = Visibility.Visible;
-            }
-            else if (pointer.Position.X > Template.ActualWidth - 10)
-            {
-                m_target = TransformationTarget.RightEdge;
-                Template.DurationVisibility = Visibility.Visible;
-            }
+        public void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            m_begin_shift = m_offset;
+            m_begin_position = e.Position.X;
+            m_current_position = m_begin_position;
+            m_begin_width = Template.ActualWidth;
+
+            m_target = e.Position.X < 20 ? 
+                TransformationTarget.LeftEdge : 
+                (
+                    e.Position.X > Template.ActualWidth - 20 ? 
+                        TransformationTarget.RightEdge : 
+                        TransformationTarget.Center
+                );
+
+            Template.Width = Template.ActualWidth;
+        }
+
+        public void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            // с магнитом.
+
+            int step = 0;
+            m_current_position += e.Delta.Translation.X;
+
+            double delta = 0;
+            if (step > 0)
+                delta = step * ((int)(m_current_position - m_begin_position) / step);
             else
-            {
-                m_target = TransformationTarget.Center;
-                Template.TimeShiftVisibility = Visibility.Visible;
-            }
+                delta = m_current_position - m_begin_position;
 
-            Template.Width = Template.ActualWidth;                
-            m_parent.SetDragItem(this);
-        }
-
-        protected void OnPointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            m_parent.SetDragItem(null, e);
-            Template.DurationVisibility = Visibility.Collapsed;
-            Template.TimeShiftVisibility = Visibility.Collapsed;            
-        }
-
-        public void Translate(double delta)
-        {
-            if (m_reset)
-            {
-                m_reset = false;
+            if (delta == 0)
                 return;
-            }
 
             switch (m_target)
             {
                 case TransformationTarget.Center:
-                    m_offset = m_offset + delta;
-                    if (m_offset < 0) m_offset = 0;
+                    m_offset = m_begin_shift + delta;
                     Template.Margin = GetMargin();
                     break;
                 case TransformationTarget.LeftEdge:
-                    Template.Width -= delta;
-                    m_offset = m_offset + delta;
-                    if (m_offset < 0) m_offset = 0;
-                    Template.Margin = GetMargin();
+                    if (m_begin_width - delta > 0)
+                    {
+                        Template.Width = m_begin_width - delta;
+                        m_offset = m_begin_shift + delta;
+                        Template.Margin = GetMargin();
+                    }
                     break;
                 case TransformationTarget.RightEdge:
-                    Template.Width += delta;
-                    break;                
+                    Template.Width = m_begin_width + delta;
+                    break;
             }
 
-            SetDuration(m_parent.DoubleToTimeSpan(Template.ActualWidth), false);
+            
+            SetDuration(m_parent.DoubleToTimeSpan(Template.Width), false);
             TimeShift = m_parent.DoubleToTimeSpan(m_offset);
-
-            m_absolute_time_shift = new TimeSpan(m_parent
-                .Items
-                .Where(x => m_parent.Items.IndexOf(x) < m_parent.Items.IndexOf(this))
-                .Sum(x => x.TimeShift.Ticks + x.Duration.Ticks)) + TimeShift;                
         }
+
+        public void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            Commit?.Invoke(this);
+        }        
     }
 }
