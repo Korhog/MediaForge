@@ -9,16 +9,29 @@
     mc:Ignorable="d"   
     Background="#0F0F0F"
     >
-    <Grid Margin="0,0,0,0">
+    <Grid Margin="0,0,0,0">        
+        
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>        
 
-        <Grid Width="800" Height="600" >
-            <Canvas x:Name="canvas"/>
-        </Grid>
+        <ScrollViewer 
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            ZoomMode="Enabled"
+            Width="400" 
+            Height="300" 
+            VerticalScrollBarVisibility="Hidden" 
+            >
+            <Grid Width="800" Height="600">
+                <Canvas x:Name="canvas" />
+                <Border BorderBrush="Red" BorderThickness="4"  Margin="-4"/>
+            </Grid>
+        </ScrollViewer>
+
+        <Button Content="WAV" Click="OnWave"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2" >
             <Button Content="Start" Click="OnStart" Margin="2"/>

@@ -374,4 +374,22 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="local:TransformationBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:TransformationBox">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border.RenderTransform>
+                            <CompositeTransform x:Name="TransformBox"/>
+                        </Border.RenderTransform>
+                        <ContentPresenter />
+                    </Border>                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

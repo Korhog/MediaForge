@@ -35,7 +35,6 @@ namespace Sequence
 
         public SequenceBase()
         {
-
             Random rand = new Random();
 
             AccentColor = ColorHelper.FromArgb(
@@ -98,7 +97,18 @@ namespace Sequence
 
         public SequenceBaseItem Current()
         {
-            return null;
+            if (m_current_idx == -1)
+                return null;
+            return Items[m_current_idx];
+        }
+
+        public void Frame(TimeSpan time)
+        {
+            foreach (var item in Items.Where(x => x is SequenceImage).Select(x => x as SequenceImage))
+            {
+                var vis = item.AbsoluteTimeShift <= time && time < item.AbsoluteTimeShift + item.Duration;
+                item.Image.Visibility = vis ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
     }
 }

@@ -62,12 +62,28 @@ namespace Sequence.UI
                     var storageFile = items[0] as StorageFile;
                     var bitmapImage = new BitmapImage();
                     bitmapImage.SetSource(await storageFile.OpenAsync(FileAccessMode.Read));
-                    m_inner_sequence.Add(new SequenceImage(m_inner_sequence, bitmapImage));
+                    m_inner_sequence.Add(new SequenceImage(m_inner_sequence, bitmapImage) {
+                        Duration = new TimeSpan(0, 0, 2)
+                    });
+                }
+            }
+            else if (e.DataView.Contains(StandardDataFormats.Text))
+            {
+                var text = await e.DataView.GetTextAsync();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    m_inner_sequence.Add(new SequenceBaseItem(m_inner_sequence)
+                    {
+                        Duration = new TimeSpan(0, 0, 2)
+                    });
                 }
             }
             else
             {
-                 m_inner_sequence.Add(new SequenceBaseItem(m_inner_sequence)); 
+                var a = e.DataView.Properties;
+                m_inner_sequence.Add(new SequenceBaseItem(m_inner_sequence) {
+                    Duration = new TimeSpan(0, 0, 2)
+                }); 
             }            
         }
 
@@ -87,6 +103,5 @@ namespace Sequence.UI
         {
             m_inner_sequence.SetDragItem(null);
         }
-
     }
 }

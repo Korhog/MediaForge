@@ -1,0 +1,53 @@
+﻿<Page
+    x:Class="MediaForge.Scene"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MediaForge"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">    
+    
+    <Grid Background="#1D1D1D}">
+        <Canvas>
+            <Grid Canvas.Top="100" Canvas.Left="100">               
+                <Grid.Resources>
+                    <Style x:Key="BoundRect" TargetType="Border">
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="ManipulationMode" Value="TranslateX, TranslateY"/>
+                        <Setter Property="Background" Value="White"/>
+                    </Style>
+                </Grid.Resources>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+                
+                <Border 
+                    x:Name="Content"
+                    Background="Red"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="1"
+                    Grid.RowSpan="3">                    
+                </Border>
+
+                <Border Style="{StaticResource BoundRect}" Grid.Column="0" Grid.Row="2" ManipulationDelta="OnManipulationDelta" />
+                <Border Style="{StaticResource BoundRect}" Grid.Column="4" Grid.Row="2" ManipulationDelta="OnManipulationDelta" />
+                <Border Style="{StaticResource BoundRect}" Grid.Column="2" Grid.Row="0" ManipulationDelta="OnManipulationDelta" />
+                <Border Style="{StaticResource BoundRect}" Grid.Column="2" Grid.Row="4" ManipulationDelta="OnManipulationDelta" />
+            </Grid>
+        </Canvas>
+    </Grid>
+</Page>

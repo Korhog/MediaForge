@@ -1,4 +1,6 @@
-﻿using Windows.UI;
+﻿using System.Linq;
+
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
@@ -28,13 +30,14 @@ namespace Sequence
         protected TimeSpan m_duration; // Продолжительность
         public TimeSpan Duration {
             get { return m_duration; }
-            set { SetDuration(value); }
+            set { SetDuration(value, true); }
         }
 
-        protected virtual void SetDuration(TimeSpan duration)
+        protected virtual void SetDuration(TimeSpan duration, bool external)
         {
             m_duration = duration;
-            // Template.Width = m_parent.TimeSpanToDouble(m_duration);
+            if (external)
+                Template.Width = m_parent.TimeSpanToDouble(m_duration);
             Template.Duration = string.Format(@"{0:hh\:mm\:ss\:ff}", Duration); 
         }
 
@@ -44,6 +47,9 @@ namespace Sequence
             get { return m_time_shift; }
             set { SetTimeShift(value); }
         }
+
+        protected TimeSpan m_absolute_time_shift; // смещение
+        public TimeSpan AbsoluteTimeShift { get { return m_absolute_time_shift; } }
 
         protected virtual void SetTimeShift(TimeSpan duration)
         {
@@ -138,8 +144,13 @@ namespace Sequence
                     break;                
             }
 
-            Duration = m_parent.DoubleToTimeSpan(Template.ActualWidth);
+            SetDuration(m_parent.DoubleToTimeSpan(Template.ActualWidth), false);
             TimeShift = m_parent.DoubleToTimeSpan(m_offset);
+
+            m_absolute_time_shift = new TimeSpan(m_parent
+                .Items
+                .Where(x => m_parent.Items.IndexOf(x) < m_parent.Items.IndexOf(this))
+                .Sum(x => x.TimeShift.Ticks + x.Duration.Ticks)) + TimeShift;                
         }
     }
 }

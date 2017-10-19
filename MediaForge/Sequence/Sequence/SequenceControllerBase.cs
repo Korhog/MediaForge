@@ -128,14 +128,11 @@ namespace Sequence
         
         protected virtual void FrameForward(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (m_sequences.Count == 0 || m_sequences[0].Items.Count == 0)
-                return;
-
             var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
-            var targetItem = m_sequences[0].Items[0] as SequenceImage;
-
-            bool vis = time >= targetItem.TimeShift && time < targetItem.TimeShift + targetItem.Duration;
-            targetItem.Image.Visibility = vis ? Visibility.Visible : Visibility.Collapsed;
+            foreach (var sequence in Sequences)
+            {
+                sequence.Frame(time);            
+            }
         }
 
         protected virtual void FrameBackward(object sender, RangeBaseValueChangedEventArgs e)

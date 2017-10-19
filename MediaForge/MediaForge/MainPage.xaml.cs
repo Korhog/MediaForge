@@ -17,27 +17,39 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MediaForge
 {
+    using Sequence.UI;
+    using AudioEngine;
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private AudioHelper wave;
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            wave = new AudioHelper();
+
             Sequensor.Controller.Create();
             Sequensor.Controller.AddItem += (sender, o) =>
             {
                 var img = o as Sequence.SequenceImage;
                 if (img == null) return;
                 
-                canvas.Children.Add(img.Image);
+                canvas.Children.Add(new TransformationBox() { Content = img.Image });
             };
         }
 
         private void OnStart(object sender, RoutedEventArgs e)
         {
             Sequensor.Play();
+        }
+
+        private async void OnWave(object sender, RoutedEventArgs e)
+        {
+            await wave.ChooseFile_Click(sender, e);
         }
     }
 }
