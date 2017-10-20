@@ -14,11 +14,7 @@ namespace AudioEngine
 {
     public class AudioHelper
     {
-        public StorageFile currentFile;
-
-        // private PlottingGraphImg imgFile;
-
-        public async Task ChooseFile_Click(object sender, RoutedEventArgs e)
+        public async Task<StorageFile> GetWaveStorageFile(object sender, RoutedEventArgs e)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary;
@@ -28,10 +24,10 @@ namespace AudioEngine
             picker.FileTypeFilter.Add(".m4a");
 
             StorageFile file = await picker.PickSingleFileAsync();
-            await ConvertToWaveFile(file);
+            return await ConvertToWaveFile(file);
         }
 
-        public async Task ConvertToWaveFile(StorageFile sourceFile)
+        public async Task<StorageFile> ConvertToWaveFile(StorageFile sourceFile)
         {
             MediaTranscoder transcoder = new MediaTranscoder();
             MediaEncodingProfile profile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.Medium);
@@ -39,10 +35,10 @@ namespace AudioEngine
             //Create temporary file in temporary folder
             string fileName = String.Format("TempFile_{0}.wav", Guid.NewGuid());
             StorageFile temporaryFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName);
-            currentFile = temporaryFile;
+
             if (sourceFile == null || temporaryFile == null)
             {
-                return;
+                return null;
             }
             try
             {
@@ -52,11 +48,12 @@ namespace AudioEngine
                     var progress = new Progress<double>((percent) => {  });
                     await preparedTranscodeResult.TranscodeAsync().AsTask(cts.Token, progress);
                 }
+                return temporaryFile;
             }
             catch
             {
-
-            }
+                return null;
+            }            
         }             
     }
 }

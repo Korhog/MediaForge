@@ -16,4 +16,33 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="local:SceneViewer">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:SceneViewer">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+
+                            </Grid.RowDefinitions>
+
+                            <Viewbox/>
+
+                            <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                                <Button></Button>
+                                <Button></Button>
+                                <Button></Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

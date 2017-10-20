@@ -19,9 +19,10 @@ namespace Sequence
         protected Image m_image;
         public Image Image { get { return m_image; } }
 
-        public SequenceImage(SequenceBase parent, BitmapSource source) : base(parent)
+        public SequenceImage(BitmapSource source) : base()
         {
             m_source = source;
+            
             var image = new Image() // Thumbnail
             {
                 Height = 100,

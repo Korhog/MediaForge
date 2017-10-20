@@ -16,7 +16,7 @@ namespace Sequence.UI
 {
 
     public sealed class Sequensor : Control
-    {       
+    { 
         private SequenceControllerBase m_controller;
         private ScrollViewer m_time_scale_scroll;
         private ScrollViewer m_sequences_scroll;

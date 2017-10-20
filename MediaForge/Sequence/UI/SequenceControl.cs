@@ -13,6 +13,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
+using AudioEngine;
 
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
 
@@ -55,13 +56,30 @@ namespace Sequence.UI
             {
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
-                {
+                { 
                     var storageFile = items[0] as StorageFile;
-                    var bitmapImage = new BitmapImage();
-                    bitmapImage.SetSource(await storageFile.OpenAsync(FileAccessMode.Read));
-                    m_inner_sequence.Add(new SequenceImage(m_inner_sequence, bitmapImage) {
-                        Duration = new TimeSpan(0, 0, 2)
-                    });
+
+                    if (storageFile.ContentType == "audio/mpeg")
+                    {
+                        var helpher = new AudioHelper();
+                        var wave = await helpher.ConvertToWaveFile(storageFile);
+                        Wav wavFile = new Wav(wave);
+                        var imgFile = new PlottingGraphImg(wavFile, 400, 100);
+                        var image = await imgFile.GetGraphicFile();                       
+                        var item = new SequenceBaseItem();
+                        item.Template.Content = image;
+                        m_inner_sequence.Add(item);
+                    }
+                    else
+                    {
+                        var bitmapImage = new BitmapImage();
+                        bitmapImage.SetSource(await storageFile.OpenAsync(FileAccessMode.Read));
+                        m_inner_sequence.Add(new SequenceImage(bitmapImage)
+                        {
+                            Duration = new TimeSpan(0, 0, 2)
+                        });
+                    }
+
                 }
             }
             else if (e.DataView.Contains(StandardDataFormats.Text))
@@ -69,7 +87,7 @@ namespace Sequence.UI
                 var text = await e.DataView.GetTextAsync();
                 if (!string.IsNullOrEmpty(text))
                 {
-                    m_inner_sequence.Add(new SequenceBaseItem(m_inner_sequence)
+                    m_inner_sequence.Add(new SequenceBaseItem()
                     {
                         Duration = new TimeSpan(0, 0, 2)
                     });
@@ -78,7 +96,7 @@ namespace Sequence.UI
             else
             {
                 var a = e.DataView.Properties;
-                m_inner_sequence.Add(new SequenceBaseItem(m_inner_sequence) {
+                m_inner_sequence.Add(new SequenceBaseItem() {
                     Duration = new TimeSpan(0, 0, 2)
                 }); 
             }            

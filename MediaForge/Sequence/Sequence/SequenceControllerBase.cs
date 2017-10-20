@@ -9,6 +9,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml;
+using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Media.Core;
 
 namespace Sequence
 {
@@ -23,6 +26,36 @@ namespace Sequence
 
     public class SequenceControllerBase
     {
+        /*
+         * Тут мы временно добаляем аудио дорожку до тех пор, пока не появится 
+         * движок с использованием аудио графа
+         */
+
+        MediaPlayer m_media_player;
+        public void SetAudioTrack(StorageFile source)
+        {
+            m_media_player = new MediaPlayer();
+            m_media_player.Source = MediaSource.CreateFromStorageFile(source);
+        }
+
+        private void PlayAudio(TimeSpan time)
+        {
+            if (m_media_player == null)
+                return;
+
+            m_media_player.PlaybackSession.Position = time;
+            m_media_player.Play();
+        }
+
+        private void StopAudio()
+        {
+            if (m_media_player == null)
+                return;
+            m_media_player.Pause();
+        }
+
+        // конец
+
         protected Slider m_slider;
 
         protected Storyboard m_animator;
@@ -89,26 +122,32 @@ namespace Sequence
         {
             var animation = m_animator.Children[0] as DoubleAnimation;
 
-            switch(m_controller_state)
+
+            var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
+            switch (m_controller_state)
             {
                 case SequenceControllerState.RESET:
                     m_controller_state = SequenceControllerState.PLAY;
                     m_animator.Begin();
+                    PlayAudio(time);
                     break;
                 case SequenceControllerState.READY:
-                    m_controller_state = SequenceControllerState.PLAY;
+                    m_controller_state = SequenceControllerState.PLAY;                    
                     m_animator.Begin();
+                    PlayAudio(time);
                     break;
                 case SequenceControllerState.PLAY:
                     var value = m_slider.Value;
                     m_controller_state = SequenceControllerState.PAUSE;
                     m_animator.Stop();
+                    StopAudio();
                     m_slider.Value = value;
                     break;
                 case SequenceControllerState.PAUSE:
                     animation.From = m_slider.Value;
                     m_controller_state = SequenceControllerState.PLAY;
                     m_animator.Begin();
+                    PlayAudio(time);
                     break;
             }
         }

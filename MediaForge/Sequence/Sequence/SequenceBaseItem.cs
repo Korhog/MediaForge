@@ -35,7 +35,7 @@ namespace Sequence
         {
             m_duration = duration;
             if (external)
-                Template.Width = m_parent.TimeSpanToDouble(m_duration);
+                Template.Width = Helpers.TimeHelper.TimeSpanToDouble(m_duration);
             Template.Duration = string.Format(@"{0:hh\:mm\:ss\:ff}", Duration); 
         }
 
@@ -45,9 +45,7 @@ namespace Sequence
             get { return m_time_shift; }
             set { SetTimeShift(value); }
         }
-
-        protected TimeSpan m_absolute_time_shift; // смещение
-        public TimeSpan AbsoluteTimeShift { get { return m_absolute_time_shift; } }
+        public TimeSpan AbsoluteTimeShift { get; set; } // Абсолютное смещение
 
         protected virtual void SetTimeShift(TimeSpan duration)
         {
@@ -59,7 +57,6 @@ namespace Sequence
         public delegate void SequenceItemCommit(SequenceBaseItem sender);
         public event SequenceItemCommit Commit;
 
-        protected SequenceBase m_parent;
         protected FrameContainer m_border;
         public FrameContainer Template { get { return m_border; } }  
         public Thickness Margin { get { return GetMargin(); } }
@@ -71,17 +68,16 @@ namespace Sequence
             return new Thickness(m_offset, 0, 0, 0);
         }
 
-        public SequenceBaseItem(SequenceBase parent)
+        public SequenceBaseItem()
         {
-            m_parent = parent;
-
             m_border = new FrameContainer()
             {
                 ManipulationMode = ManipulationModes.TranslateX,
                 BorderThickness = new Thickness(4, 0, 4, 0),
                 MinHeight = 50,
-                MinWidth = 10,  
-                AccentColor = parent.AccentColor
+                MinWidth = 10,
+                AccentColor = Colors.PaleVioletRed
+
             };
 
             m_border.ManipulationStarted += OnManipulationStarted;
@@ -149,8 +145,8 @@ namespace Sequence
             }
 
             
-            SetDuration(m_parent.DoubleToTimeSpan(Template.Width), false);
-            TimeShift = m_parent.DoubleToTimeSpan(m_offset);
+            SetDuration(Helpers.TimeHelper.DoubleToTimeSpan(Template.Width), false);
+            TimeShift = Helpers.TimeHelper.DoubleToTimeSpan(m_offset);
         }
 
         public void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)

@@ -9,6 +9,8 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace AudioEngine
 {
@@ -46,7 +48,7 @@ namespace AudioEngine
             get { return backgroundColor; }
             set { backgroundColor = value; }
         }
-        private Color foregroundColor = Color.FromArgb(255, 255, 255, 255);
+        private Color foregroundColor = Color.FromArgb(255, 0, 0, 255);
         public Color ForegroundColor
         {
             get { return foregroundColor; }
@@ -72,6 +74,7 @@ namespace AudioEngine
             BuildImage();
             CreateGraphicFile();
         }
+
         private void BuildImage()
         {
             int xPos = 2;
@@ -97,19 +100,20 @@ namespace AudioEngine
         [ComImport]
         [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        interface IMemoryBufferByteAccess
+        unsafe interface IMemoryBufferByteAccess
         {
-            void GetBuffer(out byte[] buffer, out uint capacity);
+            void GetBuffer(out byte* buffer, out uint capacity);
         }
-        public void CreateGraphicFile()
+
+        public unsafe void CreateGraphicFile()
         {
-            softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, ImageWidth, ImageHeight);
+            softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, ImageWidth, ImageHeight, BitmapAlphaMode.Ignore);
 
             using (BitmapBuffer buffer = softwareBitmap.LockBuffer(BitmapBufferAccessMode.Write))
             {
                 using (var reference = buffer.CreateReference())
                 {
-                    byte[] dataInBytes;
+                    byte* dataInBytes;
                     uint capacity;
                     ((IMemoryBufferByteAccess)reference).GetBuffer(out dataInBytes, out capacity);
 
@@ -133,6 +137,21 @@ namespace AudioEngine
                 }
             }
         }
+
+        public async Task<Image> GetGraphicFile()
+        {
+            SoftwareBitmapSource source = new SoftwareBitmapSource();
+            await source.SetBitmapAsync(softwareBitmap);
+
+            Image img = new Image()
+            {
+                Source = source,
+                Height = 100
+            };
+
+            return img; 
+        }
+
         public async Task SaveGraphicFile(StorageFile outputFile)
         {
             using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
@@ -141,6 +160,8 @@ namespace AudioEngine
                 encoder.SetSoftwareBitmap(softwareBitmap);
                 encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
                 encoder.IsThumbnailGenerated = true;
+
+
                 try
                 {
                     await encoder.FlushAsync();
@@ -149,7 +170,7 @@ namespace AudioEngine
                 {
                     switch (err.HResult)
                     {
-                        case unchecked((int)0x88982F81): //WINCODEC_ERR_UNSUPPORTEDOPERATION
+                        case unchecked((int)0x88982F81): // WINCODEC_ERR_UNSUPPORTEDOPERATION
                                                          // If the encoder does not support writing a thumbnail, then try again
                                                          // but disable thumbnail generation.
                             encoder.IsThumbnailGenerated = false;
@@ -176,20 +197,20 @@ namespace AudioEngine
         #region AudioData
         private List<float> floatAudioBuffer = new List<float>();
         #endregion
-        public Wav(string _path)
+        public Wav(StorageFile source)
         {
-            PathAudioFile = _path;
-            ReadWavFile(_path);
+            PathAudioFile = source.Path;
+            ReadWavFile(source);
         }
         public float[] GetFloatBuffer()
         {
             return floatAudioBuffer.ToArray();
         }
-        private void ReadWavFile(string filename)
+        private void ReadWavFile(StorageFile source)
         {
             try
             {
-                using (FileStream fileStream = File.Open(filename, FileMode.Open))
+                using (FileStream fileStream = File.Open(source.Path, FileMode.Open))
                 {
                     BinaryReader reader = new BinaryReader(fileStream);
                     // RIFF

@@ -51,7 +51,20 @@ namespace Sequence
         public virtual void Add(SequenceBaseItem item)
         {
             Items.Add(item);
+            item.Commit += OnItemCommit;
             AddItem?.Invoke(this, item);
+        }
+
+        public void OnItemCommit(SequenceBaseItem sender)
+        {
+            foreach(var item in Items)
+            {
+                TimeSpan time = new TimeSpan(Items
+                    .Where(x => Items.IndexOf(x) < Items.IndexOf(item))
+                    .Sum(x => x.TimeShift.Ticks + x.Duration.Ticks));
+
+                item.AbsoluteTimeShift = time + item.TimeShift;
+            }
         }
 
         public void SetDragItem(SequenceBaseItem item, PointerRoutedEventArgs e = null)

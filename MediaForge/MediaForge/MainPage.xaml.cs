@@ -20,19 +20,17 @@ namespace MediaForge
     using Sequence.UI;
     using AudioEngine;
     using Windows.Storage.Pickers;
+    using Windows.Media.Playback;
+    using Windows.Media.Core;
 
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private AudioHelper wave;
-
         public MainPage()
         {
-            this.InitializeComponent();
-
-            wave = new AudioHelper();
+            this.InitializeComponent();            
 
             Sequensor.Controller.Create();
             Sequensor.Controller.AddItem += (sender, o) =>
@@ -51,23 +49,20 @@ namespace MediaForge
 
         private async void OnWave(object sender, RoutedEventArgs e)
         {
-            await wave.ChooseFile_Click(sender, e);
+            var helpher = new AudioHelper();
+            var wave = await helpher.GetWaveStorageFile(sender, e);
+            Sequensor.Controller.SetAudioTrack(wave);
+            
+            Wav wavFile = new Wav(wave);
+            var imgFile = new PlottingGraphImg(wavFile, 400, 100);
 
-            Wav wavFile = new Wav(wave.currentFile.Path.ToString());
-            var imgFile = new PlottingGraphImg(wavFile, 1000, 100);
-            FileSavePicker fileSavePicker = new FileSavePicker();
-            fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
-            fileSavePicker.SuggestedFileName = "image";
+            var image = await imgFile.GetGraphicFile();
 
-            var outputFile = await fileSavePicker.PickSaveFileAsync();
-            if (outputFile == null)
-            {
-                // The user cancelled the picking operation
-                return;
-            }
-            await imgFile.SaveGraphicFile(outputFile);
+            var sequence = Sequensor.Controller.Sequences[0];
+            var item = new Sequence.SequenceBaseItem();
+            item.Template.Content = image;
 
+            sequence.Add(item);            
         }
     }
 }

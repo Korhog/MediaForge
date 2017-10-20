@@ -136,6 +136,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AudioEngine\AudioEngine.csproj">
+      <Project>{e2ab1bbd-3aa5-4665-99cb-5ab506bf0be5}</Project>
+      <Name>AudioEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{9a85220a-2dd4-4d5b-9a7e-15d03ce85db3}</Project>
       <Name>Controls</Name>
