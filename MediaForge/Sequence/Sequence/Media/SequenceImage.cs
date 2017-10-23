@@ -42,7 +42,7 @@ namespace Sequence.Media
                 Source = m_bitmap
             };
 
-            m_render.Source = m_bitmap;
+            m_render.SetImageSource(m_bitmap);
             Template.Content = image;
         } 
     };

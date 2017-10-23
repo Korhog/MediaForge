@@ -45,4 +45,24 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="local:RenderBuffer" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RenderBuffer">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"   
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}" >
+                        <Grid VerticalAlignment="Stretch">
+                            <Image Canvas.ZIndex="1" x:Name="BufferOne" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"/>
+                            <Image Canvas.ZIndex="0" x:Name="BufferTwo" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

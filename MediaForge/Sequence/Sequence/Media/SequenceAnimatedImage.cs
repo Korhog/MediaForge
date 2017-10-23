@@ -44,20 +44,23 @@ namespace Sequence.Media
             var count = decoder.FrameCount;           
             m_frames = new AnimatedImageFrame[count];
 
+            TimeSpan delay;
             TimeSpan startTime = new TimeSpan();
             for (uint i = 0; i < count; i++)
             {
-                var frame = await decoder.GetFrameAsync(i);
+                var frame = await decoder.GetFrameAsync(i);                
 
                 var prop = await frame.BitmapProperties.GetPropertiesAsync(props);
-                TimeSpan delay = TimeSpan.FromMilliseconds(10 * (UInt16)prop.FirstOrDefault().Value.Value);
+                delay = TimeSpan.FromMilliseconds(10 * (UInt16)prop.FirstOrDefault().Value.Value);
+                if (delay.Ticks == 0)
+                    delay = TimeSpan.FromMilliseconds(100);
 
                 var source = new SoftwareBitmapSource();
-                await source.SetBitmapAsync(await frame.GetSoftwareBitmapAsync(
+                await source.SetBitmapAsync(SoftwareBitmap.Convert(
+                    await frame.GetSoftwareBitmapAsync(),
                     BitmapPixelFormat.Bgra8,
                     BitmapAlphaMode.Premultiplied
-                    )
-                );
+                ));
 
                 m_frames[i] = new AnimatedImageFrame()
                 {
@@ -79,10 +82,10 @@ namespace Sequence.Media
             // получаем кадр
             var localTime = time - StartTime;
             var frame = m_frames.Where(x => x.StartTime <= localTime).LastOrDefault();
-            if (frame == null || m_render.Source == frame.ImageSource)
+            if (frame == null)
                 return;
 
-            m_render.Source = frame.ImageSource;
+            m_render.SetImageSource(frame.ImageSource);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Sequence.Helpers
     {
         public static double TimeSpanToDouble(TimeSpan timeSpan, double pixelsInSecond = 60)
         {
-            return (timeSpan.Ticks / 10000000) * pixelsInSecond;
+            return ((double)timeSpan.Ticks / 10000000.0) * pixelsInSecond;
         }
 
         public static TimeSpan DoubleToTimeSpan(double value, double pixelsInSecond = 60)
