@@ -68,6 +68,9 @@ namespace Sequence
             {
                 case TransformationTarget.Center:
                     m_offset = m_begin_shift + delta;
+                    if (m_offset < 0)
+                        m_offset = 0;
+
                     Template.Margin = GetMargin();
                     break;
                 case TransformationTarget.LeftEdge:
