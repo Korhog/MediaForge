@@ -11,79 +11,18 @@ namespace Sequence
     using System;
     using UI;
 
-    public enum TransformationTarget
-    {
-        Center,
-        LeftEdge,
-        RightEdge
-    }
-
     /// <summary>
-    /// Базовый класс элемента последовательности.
+    /// 
     /// </summary>  
-    public class SequenceBaseItem
+    public partial class SequenceBaseObject
     {
         TransformationTarget m_target = TransformationTarget.Center;
 
-        protected TimeSpan m_duration; // Продолжительность
-        public TimeSpan Duration {
-            get { return m_duration; }
-            set { SetDuration(value, true); }
-        }
+        public delegate void SequenceItemCommit(SequenceBaseObject sender);
+        public virtual event SequenceItemCommit Commit;
 
-        protected virtual void SetDuration(TimeSpan duration, bool external)
-        {
-            m_duration = duration;
-            if (external)
-                Template.Width = Helpers.TimeHelper.TimeSpanToDouble(m_duration);
-            Template.Duration = string.Format(@"{0:hh\:mm\:ss\:ff}", Duration); 
-        }
-
-        protected TimeSpan m_time_shift; // смещение
-        public TimeSpan TimeShift
-        {
-            get { return m_time_shift; }
-            set { SetTimeShift(value); }
-        }
-        public TimeSpan AbsoluteTimeShift { get; set; } // Абсолютное смещение
-
-        protected virtual void SetTimeShift(TimeSpan duration)
-        {
-            m_time_shift = duration;
-            // Template.Width = m_parent.TimeSpanToDouble(m_duration);
-            Template.TimeShift = string.Format(@"{0:hh\:mm\:ss\:ff}", TimeShift);
-        }
-
-        public delegate void SequenceItemCommit(SequenceBaseItem sender);
-        public event SequenceItemCommit Commit;
-
-        protected FrameContainer m_border;
-        public FrameContainer Template { get { return m_border; } }  
-        public Thickness Margin { get { return GetMargin(); } }
-
-        double m_offset = 0;
-
-        Thickness GetMargin()
-        {
-            return new Thickness(m_offset, 0, 0, 0);
-        }
-
-        public SequenceBaseItem()
-        {
-            m_border = new FrameContainer()
-            {
-                ManipulationMode = ManipulationModes.TranslateX,
-                BorderThickness = new Thickness(4, 0, 4, 0),
-                MinHeight = 50,
-                MinWidth = 10,
-                AccentColor = Colors.PaleVioletRed
-
-            };
-
-            m_border.ManipulationStarted += OnManipulationStarted;
-            m_border.ManipulationDelta += OnManipulationDelta;
-            m_border.ManipulationCompleted += OnManipulationCompleted;
-        }
+        public delegate void SequenceItemLoaded(SequenceBaseObject sender);
+        public virtual event SequenceItemLoaded Loaded;
 
         // Манипуляции        
         private double m_begin_shift;

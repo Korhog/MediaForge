@@ -18,11 +18,8 @@ using Windows.UI.Xaml.Navigation;
 namespace MediaForge
 {
     using Sequence.UI;
+    using Sequence.Media;
     using AudioEngine;
-    using Windows.Storage.Pickers;
-    using Windows.Media.Playback;
-    using Windows.Media.Core;
-
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
@@ -30,15 +27,16 @@ namespace MediaForge
     {
         public MainPage()
         {
-            this.InitializeComponent();            
+            this.InitializeComponent();
 
             Sequensor.Controller.Create();
-            Sequensor.Controller.AddItem += (sender, o) =>
+            Sequensor.Controller.AddItem += (sender, item) =>
             {
-                var img = o as Sequence.SequenceImage;
-                if (img == null) return;
-                
-                canvas.Children.Add(new TransformationBox() { Content = img.Image });
+                var render = item as Sequence.Render.SequenceRenderObject;
+                if (render != null)
+                {
+                    canvas.Children.Add(render.Render);
+                }
             };
         }
 
@@ -59,7 +57,7 @@ namespace MediaForge
             var image = await imgFile.GetGraphicFile();
 
             var sequence = Sequensor.Controller.Sequences[0];
-            var item = new Sequence.SequenceBaseItem();
+            var item = new Sequence.SequenceBaseObject();
             item.Template.Content = image;
 
             sequence.Add(item);            

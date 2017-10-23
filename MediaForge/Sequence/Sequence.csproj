@@ -108,12 +108,17 @@
   <ItemGroup>
     <Compile Include="Helpers\TimeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sequence\Input\SequenceBase.cs" />
+    <Compile Include="Sequence\Input\SequenceBaseObject.cs" />
+    <Compile Include="Sequence\Media\SequenceAnimatedImage.cs" />
+    <Compile Include="Sequence\Render\SequenceBaseObject.cs" />
+    <Compile Include="Sequence\Render\SequenceRenderObject.cs" />
     <Compile Include="Sequence\SequenceControllerBase.cs" />
     <Compile Include="Sequence\Media\SequenceImage.cs" />
     <Compile Include="UI\FrameContainer.cs" />
     <Compile Include="UI\SequenceControl.cs" />
     <Compile Include="Sequence\SequenceBase.cs" />
-    <Compile Include="Sequence\SequenceBaseItem.cs" />
+    <Compile Include="Sequence\SequenceBaseObject.cs" />
     <Compile Include="UI\Sequensor.cs" />
     <Compile Include="UI\TimeScaleControl.cs" />
     <Compile Include="UI\TransformationBox.cs" />

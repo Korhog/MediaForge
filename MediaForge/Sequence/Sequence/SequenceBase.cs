@@ -14,23 +14,23 @@ using Windows.UI.Xaml;
 
 namespace Sequence
 {
+    using Media;
     /// <summary>
     /// Базовый класс последовательности.
     /// </summary>   
-
-    public class SequenceBase
+    public partial class SequenceBase
     {
         public int m_current_idx = -1;
         public Color AccentColor { get; set; }
 
-        public delegate void SequenceItemAdded(SequenceBase sender, SequenceBaseItem item);
+        public delegate void SequenceItemAdded(SequenceBase sender, SequenceBaseObject item);
         public event SequenceItemAdded AddItem;
 
-        protected SequenceBaseItem m_drag_item;
-        public SequenceBaseItem DragItem { get { return m_drag_item; } }
+        protected SequenceBaseObject m_drag_item;
+        public SequenceBaseObject DragItem { get { return m_drag_item; } }
 
-        protected ObservableCollection<SequenceBaseItem> m_items;
-        public ObservableCollection<SequenceBaseItem> Items { get { return m_items; } }
+        protected ObservableCollection<SequenceBaseObject> m_items;
+        public ObservableCollection<SequenceBaseObject> Items { get { return m_items; } }
 
         public SequenceBase()
         {
@@ -43,19 +43,23 @@ namespace Sequence
                 (byte)rand.Next(100, 200)
             );
 
-            m_items = new ObservableCollection<SequenceBaseItem>();
-            var v = DoubleToTimeSpan(120);
-            var w = TimeSpanToDouble(v);
+            m_items = new ObservableCollection<SequenceBaseObject>();
         }
 
-        public virtual void Add(SequenceBaseItem item)
+        public async virtual void Add(SequenceBaseObject item)
         {
             Items.Add(item);
             item.Commit += OnItemCommit;
-            AddItem?.Invoke(this, item);
+
+            item.Loaded += (sender) =>
+            {
+                AddItem?.Invoke(this, sender);
+            };
+
+            await item.Load();
         }
 
-        public void OnItemCommit(SequenceBaseItem sender)
+        public void OnItemCommit(SequenceBaseObject sender)
         {
             foreach(var item in Items)
             {
@@ -63,64 +67,14 @@ namespace Sequence
                     .Where(x => Items.IndexOf(x) < Items.IndexOf(item))
                     .Sum(x => x.TimeShift.Ticks + x.Duration.Ticks));
 
-                item.AbsoluteTimeShift = time + item.TimeShift;
+                item.StartTime = time + item.TimeShift;
             }
-        }
-
-        public void SetDragItem(SequenceBaseItem item, PointerRoutedEventArgs e = null)
-        {
-            m_drag_item = item;
-        }
-
-        public double TimeSpanToDouble(TimeSpan timeSpan)
-        {
-            return (timeSpan.Ticks / 10000000) * 60;
-        }
-
-        public TimeSpan DoubleToTimeSpan(double value)
-        {
-            var ticks = (long)((value / 60) * 10000000);
-            var timeSpan = new TimeSpan(ticks);            
-            return timeSpan;
-        }
-
-        public SequenceBaseItem First()
-        {
-            if (Items.Count == 0)
-                return null;
-
-            m_current_idx = 0;
-            return Items[m_current_idx];
-            
-        }
-
-        public SequenceBaseItem Next()
-        {
-            if (m_current_idx == -1)
-                return First();
-
-
-            if (m_current_idx + 1 >= Items.Count)
-                return null;
-
-            m_current_idx++;
-            return Items[m_current_idx];
-        }
-
-        public SequenceBaseItem Current()
-        {
-            if (m_current_idx == -1)
-                return null;
-            return Items[m_current_idx];
-        }
+        }        
 
         public void Frame(TimeSpan time)
         {
-            foreach (var item in Items.Where(x => x is SequenceImage).Select(x => x as SequenceImage))
-            {
-                var vis = item.AbsoluteTimeShift <= time && time < item.AbsoluteTimeShift + item.Duration;
-                item.Image.Visibility = vis ? Visibility.Visible : Visibility.Collapsed;
-            }
+            foreach (var item in Items.Where(x => x is Render.SequenceRenderObject).Select(x => x as Render.SequenceRenderObject))
+                item.Update(time);
         }
     }
 }

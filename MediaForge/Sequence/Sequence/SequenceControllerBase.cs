@@ -61,7 +61,7 @@ namespace Sequence
         protected Storyboard m_animator;
         protected SequenceControllerState m_controller_state = SequenceControllerState.NONE;
 
-        public delegate void SequenceItemAdded(SequenceControllerBase sender, SequenceBaseItem item);
+        public delegate void SequenceItemAdded(SequenceControllerBase sender, SequenceBaseObject item);
         public event SequenceItemAdded AddItem;
 
         ObservableCollection<SequenceBase> m_sequences;

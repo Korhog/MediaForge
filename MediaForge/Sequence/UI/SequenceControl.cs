@@ -19,6 +19,8 @@ using AudioEngine;
 
 namespace Sequence.UI
 {
+    using Media;
+
     public sealed class SequenceControl : ItemsControl
     {
         private Border m_border;
@@ -41,65 +43,8 @@ namespace Sequence.UI
 
             m_border = GetTemplateChild("Border") as Border;
 
-            m_border.DragOver += OnDropOver;
-            m_border.Drop += OnDrop;
-        }
-
-        private void OnDropOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = DataPackageOperation.Copy;
-        }
-
-        private async void OnDrop(object sender, DragEventArgs e)
-        {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems))
-            {
-                var items = await e.DataView.GetStorageItemsAsync();
-                if (items.Count > 0)
-                { 
-                    var storageFile = items[0] as StorageFile;
-
-                    if (storageFile.ContentType == "audio/mpeg")
-                    {
-                        var helpher = new AudioHelper();
-                        var wave = await helpher.ConvertToWaveFile(storageFile);
-                        Wav wavFile = new Wav(wave);
-                        var imgFile = new PlottingGraphImg(wavFile, 400, 100);
-                        var image = await imgFile.GetGraphicFile();                       
-                        var item = new SequenceBaseItem();
-                        item.Template.Content = image;
-                        m_inner_sequence.Add(item);
-                    }
-                    else
-                    {
-                        var bitmapImage = new BitmapImage();
-                        bitmapImage.SetSource(await storageFile.OpenAsync(FileAccessMode.Read));
-                        m_inner_sequence.Add(new SequenceImage(bitmapImage)
-                        {
-                            Duration = new TimeSpan(0, 0, 2)
-                        });
-                    }
-
-                }
-            }
-            else if (e.DataView.Contains(StandardDataFormats.Text))
-            {
-                var text = await e.DataView.GetTextAsync();
-                if (!string.IsNullOrEmpty(text))
-                {
-                    m_inner_sequence.Add(new SequenceBaseItem()
-                    {
-                        Duration = new TimeSpan(0, 0, 2)
-                    });
-                }
-            }
-            else
-            {
-                var a = e.DataView.Properties;
-                m_inner_sequence.Add(new SequenceBaseItem() {
-                    Duration = new TimeSpan(0, 0, 2)
-                }); 
-            }            
-        }
+            m_border.DragOver += m_inner_sequence.OnDropOver;
+            m_border.Drop += m_inner_sequence.OnDrop;
+        }        
     }
 }

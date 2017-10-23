@@ -6,34 +6,44 @@ using System.Threading.Tasks;
 
 using Windows.UI.Xaml.Controls;
 
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace Sequence
+namespace Sequence.Media
 {
-    public class SequenceImage : SequenceBaseItem
+    using Render;
+    using Windows.Storage;
+
+    public class SequenceImage : SequenceRenderObject
     {
-        protected BitmapSource m_source;
-        public BitmapSource Source { get { return m_source; } }
+        protected StorageFile m_source;
+        protected BitmapImage m_bitmap;        
 
-        protected Image m_image;
-        public Image Image { get { return m_image; } }
-
-        public SequenceImage(BitmapSource source) : base()
+        public SequenceImage(StorageFile source) : base()
         {
             m_source = source;
-            
-            var image = new Image() // Thumbnail
+        }
+
+        override public async Task Load()
+        {            
+            await GetBitmap();
+            OnLoaded();
+        }
+
+        protected virtual async Task GetBitmap()
+        {
+            m_bitmap = new BitmapImage() { AutoPlay = false };
+            m_bitmap.SetSource(await m_source.OpenAsync(FileAccessMode.Read));
+
+            var image = new Image()
             {
                 Height = 100,
-                Source = m_source
-            };          
-            
-            m_image = new Image() {                
-                Source = m_source
+                Source = m_bitmap
             };
 
+            m_render.Source = m_bitmap;
             Template.Content = image;
-        }
+        } 
     };
 }
