@@ -12,6 +12,8 @@ using Windows.UI.Xaml;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Media.Core;
+using Sequence.Media;
+using Windows.Graphics.Imaging;
 
 namespace Sequence
 {
@@ -63,6 +65,9 @@ namespace Sequence
 
         public delegate void SequenceItemAdded(SequenceControllerBase sender, SequenceBaseObject item);
         public event SequenceItemAdded AddItem;
+
+        public delegate void Draw();
+        public event Draw OnDraw;
 
         ObservableCollection<SequenceBase> m_sequences;
         ObservableCollection<string> m_names;
@@ -164,19 +169,44 @@ namespace Sequence
                 FrameForward(sender, e);
             }
         }  
+
+        public SoftwareBitmap[][] GetRenderObjects()
+        {
+            var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
+            var layers = m_sequences
+                .OrderByDescending(x => m_sequences.IndexOf(x))
+                .Select(x => x.Items
+                    .Where(y => y is SequenceAnimatedImage && y.StartTime < time && y.StartTime + y.Duration >= time)
+                    .Select(y => y as SequenceAnimatedImage)
+                    .Select(y => y.GetRenderData(time)).ToArray())
+                    .ToArray();
+            return layers;
+        }
         
         protected virtual void FrameForward(object sender, RangeBaseValueChangedEventArgs e)
         {
+            /*
+            // Получаем список всех активных рендер объектов   
             var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
+            var layers = m_sequences
+                .OrderByDescending(x => m_sequences.IndexOf(x))
+                .Select(x => x.Items.Where(y => y is Render.SequenceRenderObject && y.StartTime < time && y.StartTime + y.Duration <= time)
+                .ToArray()).ToArray();
+            
             foreach (var sequence in Sequences)
             {
                 sequence.Frame(time);            
             }
+            */
+
+            OnDraw?.Invoke();
         }
 
         protected virtual void FrameBackward(object sender, RangeBaseValueChangedEventArgs e)
         {
 
         }
+
+        
     }
 }

@@ -15,6 +15,9 @@ namespace Sequence.Media
     using Render;
     using Windows.Storage;
 
+    using MediaCore.Decoder;
+    using MediaCore.Types;
+
     public class SequenceImage : SequenceRenderObject
     {
         protected StorageFile m_source;
@@ -33,9 +36,7 @@ namespace Sequence.Media
 
         protected virtual async Task GetBitmap()
         {
-            m_bitmap = new BitmapImage() { AutoPlay = false };
-            m_bitmap.SetSource(await m_source.OpenAsync(FileAccessMode.Read));
-
+            m_bitmap = await Decoder.GetTestBitmapImage();
             var image = new Image()
             {
                 Height = 100,

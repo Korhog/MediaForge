@@ -11,81 +11,53 @@ namespace Sequence.Media
     using Windows.UI.Xaml.Media;
     using Windows.UI.Xaml.Media.Imaging;
 
-    public class AnimatedImageFrame
-    {
-        public TimeSpan StartTime { get; set; }
-        public ImageSource ImageSource { get; set; }
-    }
+    using MediaCore.Decoder;
+    using MediaCore.Types;
 
     public class SequenceAnimatedImage : SequenceImage
     {
-        AnimatedImageFrame[] m_frames = null;
+        private AnimatedImage m_image;
 
         public SequenceAnimatedImage(StorageFile source) : base(source)
         {
-
+            m_fixed = true;
         }
 
         override public async Task Load()
         {
             await GetBitmap();
-            await GetFrames();
+            await DecodeFrames();
             OnLoaded();
         }
 
-        protected virtual async Task GetFrames()
+        protected virtual async Task DecodeFrames()
         {
-            string[] props = new string[] { "/grctlext/Delay" };
+            m_image = await Decoder.DecodeAnimatedImage(m_source, Microsoft.Graphics.Canvas.CanvasBitmapFileFormat.Gif);
 
-            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(
-                BitmapDecoder.GifDecoderId,
-                await m_source.OpenAsync(FileAccessMode.Read));
+            Width = m_image.Width;
+            Height = m_image.Height;
 
-            var count = decoder.FrameCount;           
-            m_frames = new AnimatedImageFrame[count];
-
-            TimeSpan delay;
-            TimeSpan startTime = new TimeSpan();
-            for (uint i = 0; i < count; i++)
-            {
-                var frame = await decoder.GetFrameAsync(i);                
-
-                var prop = await frame.BitmapProperties.GetPropertiesAsync(props);
-                delay = TimeSpan.FromMilliseconds(10 * (UInt16)prop.FirstOrDefault().Value.Value);
-                if (delay.Ticks == 0)
-                    delay = TimeSpan.FromMilliseconds(100);
-
-                var source = new SoftwareBitmapSource();
-                await source.SetBitmapAsync(SoftwareBitmap.Convert(
-                    await frame.GetSoftwareBitmapAsync(),
-                    BitmapPixelFormat.Bgra8,
-                    BitmapAlphaMode.Premultiplied
-                ));
-
-                m_frames[i] = new AnimatedImageFrame()
-                {
-                    StartTime = startTime,
-                    ImageSource = source
-                };
-
-                startTime += delay;             
-            }
-
-            Duration = startTime;
+            Duration = m_image.Duration;
         }
 
         protected override void UpdateRenderTarget(SequenceUpdateResult action, TimeSpan time)
         {
             base.UpdateRenderTarget(action, time);
-            if (m_frames == null)
+            if (m_image == null)
                 return;
             // получаем кадр
             var localTime = time - StartTime;
-            var frame = m_frames.Where(x => x.StartTime <= localTime).LastOrDefault();
+            var frame = m_image.GetFrame(localTime);
             if (frame == null)
                 return;
 
             m_render.SetImageSource(frame.ImageSource);
+        }
+
+        public override SoftwareBitmap GetRenderData(TimeSpan time)
+        {
+            var localTime = time - StartTime;
+            return m_image.GetFrame(localTime).Render;            
         }
     }
 }

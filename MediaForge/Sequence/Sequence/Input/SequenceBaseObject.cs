@@ -16,6 +16,7 @@ namespace Sequence
     /// </summary>  
     public partial class SequenceBaseObject
     {
+        protected bool m_fixed = false;
         TransformationTarget m_target = TransformationTarget.Center;
 
         public delegate void SequenceItemCommit(SequenceBaseObject sender);
@@ -37,13 +38,18 @@ namespace Sequence
             m_current_position = m_begin_position;
             m_begin_width = Template.ActualWidth;
 
-            m_target = e.Position.X < 20 ? 
-                TransformationTarget.LeftEdge : 
-                (
-                    e.Position.X > Template.ActualWidth - 20 ? 
-                        TransformationTarget.RightEdge : 
-                        TransformationTarget.Center
-                );
+            if (m_fixed)
+                m_target = TransformationTarget.Center;
+            else
+            {
+                m_target = e.Position.X < 20 ?
+                    TransformationTarget.LeftEdge :
+                    (
+                        e.Position.X > Template.ActualWidth - 20 ?
+                            TransformationTarget.RightEdge :
+                            TransformationTarget.Center
+                    );
+            }
 
             Template.Width = Template.ActualWidth;
         }

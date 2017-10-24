@@ -6,37 +6,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sequence ="using:Sequence.UI"
+    xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"   
     Background="#0F0F0F"
     >
     <Grid Margin="0,0,0,0">
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <ScrollViewer 
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            ZoomMode="Enabled"
+            <RowDefinition/>
+        </Grid.RowDefinitions>        
+
+        <Grid >
+            <Canvas x:Name="canvas" Margin="40"/>
+            <Border BorderBrush="Red" BorderThickness="4"  Margin="-4"/>
+        </Grid>
+
+        <win2d:CanvasControl 
+            x:Name="W2D"
+            Grid.Column="1" 
             Width="400" 
             Height="300" 
-            VerticalScrollBarVisibility="Hidden" 
-            >
-            <Grid Width="800" Height="600">
-                <Canvas x:Name="canvas" />
-                <Border BorderBrush="Red" BorderThickness="4"  Margin="-4"/>
-            </Grid>
-        </ScrollViewer>
+            Draw="OnDebugDraw"            
+            ClearColor="SlateBlue"/>
+        <Button Content="Render" Grid.Column="1" Click="Render"/>
 
-        <Button Content="WAV" Click="OnWave"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2" >
+        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2" >
             <Button Content="Start" Click="OnStart" Margin="2"/>
             <Button Content="Start" Click="OnStart" Margin="2"/>
             <Button Content="Start" Click="OnStart" Margin="2"/>
         </StackPanel>
-        <sequence:Sequensor x:Name="Sequensor" VerticalAlignment="Bottom" Grid.Row="2" />
+        
+        <sequence:Sequensor 
+            x:Name="Sequensor"  
+            Grid.ColumnSpan="2"
+            Grid.Row="2" />
     </Grid>
 </Page>

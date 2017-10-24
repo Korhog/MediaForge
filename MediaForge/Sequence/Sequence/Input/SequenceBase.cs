@@ -32,6 +32,13 @@ namespace Sequence
                             Duration = new TimeSpan(0, 0, 1)
                         });
                     }
+                    else if (storageFile.FileType == ".mp4")
+                    {
+                        Add(new SequenceAnimatedImage(storageFile)
+                        {
+                            Duration = new TimeSpan(0, 0, 1)
+                        });
+                    }
                     else
                     {
                         Add(new SequenceImage(storageFile)

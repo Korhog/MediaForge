@@ -20,6 +20,9 @@ namespace MediaForge
     using Sequence.UI;
     using Sequence.Media;
     using AudioEngine;
+    using Microsoft.Graphics.Canvas;
+    using Windows.UI;
+
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
@@ -32,17 +35,32 @@ namespace MediaForge
             Sequensor.Controller.Create();
             Sequensor.Controller.AddItem += (sender, item) =>
             {
+                if (item is Sequence.Render.SequenceRenderObject)
+                {
+                    W2D.Width = (item as Sequence.Render.SequenceRenderObject).Width;
+                    W2D.Height = (item as Sequence.Render.SequenceRenderObject).Height;
+
+                    canvas.Width = (item as Sequence.Render.SequenceRenderObject).Width;
+                    canvas.Height = (item as Sequence.Render.SequenceRenderObject).Height;
+                }
+
                 var render = item as Sequence.Render.SequenceRenderObject;
                 if (render != null)
                 {
                     canvas.Children.Add(render.Render);
                 }
             };
+
+            Sequensor.Controller.OnDraw += () =>
+            {
+                W2D.Invalidate();
+            };
         }
 
         private void OnStart(object sender, RoutedEventArgs e)
         {
             Sequensor.Play();
+
         }
 
         private async void OnWave(object sender, RoutedEventArgs e)
@@ -61,6 +79,31 @@ namespace MediaForge
             item.Template.Content = image;
 
             sequence.Add(item);            
+        }
+
+        private void OnDebugDraw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
+        {
+            var session = args.DrawingSession;
+            session.Clear(Colors.DarkSlateBlue);
+
+            var layers = Sequensor.Controller.GetRenderObjects();
+            foreach(var layer in layers)
+            {
+                foreach(var render in layer)
+                {
+                    var cbi = CanvasBitmap.CreateFromSoftwareBitmap(
+                        session.Device,
+                        render
+                    );
+
+                    session.DrawImage(cbi);
+                }                
+            }
+        }
+
+        private void Render(object sender, RoutedEventArgs e)
+        {
+            W2D.Invalidate();
         }
     }
 }
