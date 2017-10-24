@@ -71,11 +71,12 @@ namespace MediaCore.Decoder
             TimeSpan startTime = new TimeSpan();
             Rect rect = new Rect(0, 0, decoder.PixelWidth, decoder.PixelHeight);
 
+            // Перебираем кадры.
             for (uint frameIdx = 0; frameIdx < decoder.FrameCount; frameIdx++)
             {
                 var frame = await decoder.GetFrameAsync(frameIdx);
-
-                // Перебираем кадры.
+                
+                // Получаем длительность кадра
                 var prop = await frame.BitmapProperties.GetPropertiesAsync(props);
                 delay = TimeSpan.FromMilliseconds(10 * (UInt16)prop.FirstOrDefault().Value.Value);
                 if (delay.Ticks == 0)
@@ -86,6 +87,7 @@ namespace MediaCore.Decoder
                     BitmapPixelFormat.Rgba16, 
                     BitmapAlphaMode.Premultiplied);
 
+                // Создаем прадварительный буфер.
                 buffer = CanvasBitmap.CreateFromSoftwareBitmap(device, softwareBitmap);
                 using (var session = renderTarget.CreateDrawingSession())
                 {
