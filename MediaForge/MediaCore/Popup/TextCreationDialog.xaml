@@ -30,9 +30,22 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <win2d:CanvasControl x:Name="canvas" ClearColor="White" Width="400" Height="80" Draw="OnDraw"/>
         <TextBox x:Name="Text" Grid.Row="1" Margin="0,4,0,0" TextChanged="OnTextChanged"/>
+        <ComboBox x:Name="Fonts" Grid.Row="2">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Border >
+                        <TextBlock 
+                            Text="{Binding FontFamilyName}" 
+                            FontFamily="{Binding FontFamily}"
+                            Margin="4"/>
+                    </Border>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
     </Grid>
 </ContentDialog>

@@ -113,6 +113,11 @@ namespace MediaCore.Popup
         public TextCreationDialog()
         {
             this.InitializeComponent();
+            Fonts.ItemsSource = CanvasTextFormat.GetSystemFontFamilies().Select(x => new
+            {
+                FontFamilyName = x,
+                FontFamily = new FontFamily(x)
+            });
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
