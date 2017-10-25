@@ -50,8 +50,9 @@ namespace MediaCore.Popup
                 };
 
                 using (CanvasTextLayout textLayout = new CanvasTextLayout(geometrySession, Text.Text, format, 400, 80))
-                {
+                {                    
                     CanvasGeometry geometry = CanvasGeometry.CreateText(textLayout);
+                    
                     CanvasStrokeStyle dashedStroke = new CanvasStrokeStyle()
                     {
                         DashStyle = CanvasDashStyle.Solid
@@ -65,7 +66,7 @@ namespace MediaCore.Popup
             }
 
 
-            CanvasBitmap bitmap = CanvasBitmap.CreateFromDirect3D11Surface(canvas, geometryRender, 96);
+            CanvasBitmap bitmap = CanvasBitmap.CreateFromDirect3D11Surface(canvas, geometryRender, canvas.Dpi);
 
 
             var resultRender = new CanvasRenderTarget(

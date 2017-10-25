@@ -107,6 +107,8 @@ namespace MediaForge
             var session = args.DrawingSession;
             session.Clear(Colors.DarkSlateBlue);
 
+            var dpi = Windows.Graphics.Display.DisplayProperties.LogicalDpi; 
+
             var layers = Sequensor.Controller.GetRenderObjects();
             foreach(var layer in layers)
             {
@@ -118,14 +120,6 @@ namespace MediaForge
                         Source = cbi,
                         TransformMatrix = render.Transformaion
                     };
-
-                    var shadow = new ShadowEffect
-                    {
-                        Source = image,
-                        BlurAmount = 12
-                    };
-
-                    session.DrawImage(shadow);
                     session.DrawImage(image);
                 }                
             }
