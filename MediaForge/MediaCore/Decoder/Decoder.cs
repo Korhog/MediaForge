@@ -43,6 +43,17 @@ namespace MediaCore.Decoder
             return bitmap;
         }
 
+        public static async Task<SoftwareBitmap> DecodeSoftwareBitmap(StorageFile source)
+        {
+            var decoder = await BitmapDecoder.CreateAsync(await source.OpenAsync(FileAccessMode.Read));
+            var result = SoftwareBitmap.Convert(
+                await decoder.GetSoftwareBitmapAsync(),
+                BitmapPixelFormat.Rgba16,
+                BitmapAlphaMode.Premultiplied);
+
+            return result;
+        }
+
         public static async Task<AnimatedImage> DecodeAnimatedImage(StorageFile source)
         {
             return await DecodeAnimatedImage(source, CanvasBitmapFileFormat.Bmp);
@@ -105,8 +116,7 @@ namespace MediaCore.Decoder
                     {
                         Duration = delay,
                         StartTime = startTime,
-                        ImageSource = bitmap,
-                        Render = SoftwareBitmap.Convert(
+                        ImageSource = SoftwareBitmap.Convert(
                             await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget),
                             BitmapPixelFormat.Rgba16,
                             BitmapAlphaMode.Premultiplied)

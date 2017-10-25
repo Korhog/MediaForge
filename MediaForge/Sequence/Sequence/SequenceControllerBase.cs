@@ -14,9 +14,15 @@ using Windows.Storage;
 using Windows.Media.Core;
 using Sequence.Media;
 using Windows.Graphics.Imaging;
+using Microsoft.Graphics.Canvas;
+
+using Render.Drawing;
+using System.Numerics;
 
 namespace Sequence
 {
+    
+
     public enum SequenceControllerState
     {
         NONE,
@@ -83,8 +89,9 @@ namespace Sequence
                 AddItem?.Invoke(this, o);
             };
 
-            Sequences.Add(sequence);
+            Sequences.Insert(0, sequence);
         }
+
         public SequenceControllerBase()
         {
             m_sequences = new ObservableCollection<SequenceBase>();
@@ -127,7 +134,6 @@ namespace Sequence
         {
             var animation = m_animator.Children[0] as DoubleAnimation;
 
-
             var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
             switch (m_controller_state)
             {
@@ -159,54 +165,28 @@ namespace Sequence
 
         protected virtual void OnFrame(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (e.NewValue > e.OldValue)
-            {
-                FrameForward(sender, e);
-            }
-            else
-            {
-                // FrameBackward(sender, e);
-                FrameForward(sender, e);
-            }
+            OnDraw?.Invoke();
         }  
 
-        public SoftwareBitmap[][] GetRenderObjects()
+        public RenderObjectBase[][] GetRenderObjects()
         {
             var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
             var layers = m_sequences
                 .OrderByDescending(x => m_sequences.IndexOf(x))
                 .Select(x => x.Items
-                    .Where(y => y is SequenceAnimatedImage && y.StartTime < time && y.StartTime + y.Duration >= time)
-                    .Select(y => y as SequenceAnimatedImage)
-                    .Select(y => y.GetRenderData(time)).ToArray())
-                    .ToArray();
+                    .Where(y => y is Render.SequenceRenderObject && time >= y.StartTime && time < y.StartTime + y.Duration)
+                    .Select(y => y as Render.SequenceRenderObject)
+                    .Select(y => new RenderObjectBase()
+                    {
+                        Source = y.GetRenderData(time),
+                        Position = new Vector2((float)y.Left, (float)y.Top),
+                        Scale = y.Scale
+                    })
+                    .ToArray()
+                )
+                .ToArray();
+
             return layers;
-        }
-        
-        protected virtual void FrameForward(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            /*
-            // Получаем список всех активных рендер объектов   
-            var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
-            var layers = m_sequences
-                .OrderByDescending(x => m_sequences.IndexOf(x))
-                .Select(x => x.Items.Where(y => y is Render.SequenceRenderObject && y.StartTime < time && y.StartTime + y.Duration <= time)
-                .ToArray()).ToArray();
-            
-            foreach (var sequence in Sequences)
-            {
-                sequence.Frame(time);            
-            }
-            */
-
-            OnDraw?.Invoke();
-        }
-
-        protected virtual void FrameBackward(object sender, RangeBaseValueChangedEventArgs e)
-        {
-
-        }
-
-        
+        }  
     }
 }

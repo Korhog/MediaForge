@@ -20,27 +20,24 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-        </Grid.RowDefinitions>        
+        </Grid.RowDefinitions>
 
-        <Grid >
-            <Canvas x:Name="canvas" Margin="40"/>
-            <Border BorderBrush="Red" BorderThickness="4"  Margin="-4"/>
-        </Grid>
-
-        <win2d:CanvasControl 
-            x:Name="W2D"
-            Grid.Column="1" 
-            Width="400" 
-            Height="300" 
-            Draw="OnDebugDraw"            
-            ClearColor="SlateBlue"/>
-        <Button Content="Render" Grid.Column="1" Click="Render"/>
-
+        <Grid Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0, 30, 0,0">            
+            <win2d:CanvasControl 
+                x:Name="W2D"           
+                Width="400" 
+                Height="300" 
+                Draw="OnDebugDraw"            
+                ClearColor="SlateBlue"/>
+            <Canvas x:Name="canvas" />
+            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="4" Click="OnCanvasShow">
+                <FontIcon Foreground="White" Glyph="&#xE156;" IsHitTestVisible="False"/>
+            </Button>
+        </Grid>   
 
         <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2" >
             <Button Content="Start" Click="OnStart" Margin="2"/>
-            <Button Content="Start" Click="OnStart" Margin="2"/>
-            <Button Content="Start" Click="OnStart" Margin="2"/>
+            <Button Content="Text" Click="OnTextEditor" Margin="2"/>
         </StackPanel>
         
         <sequence:Sequensor 

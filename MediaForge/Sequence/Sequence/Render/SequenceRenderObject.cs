@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 namespace Sequence.Render
 {
     using Controls.Container.UI;
+    using Microsoft.Graphics.Canvas;
     using Windows.Graphics.Imaging;
 
     /// <summary>
@@ -21,10 +22,26 @@ namespace Sequence.Render
         public double Width { get; set; }
         public double Height { get; set; }
 
+        public double Left { get; set; }
+        public double Top { get; set; }
+
+        public float Scale { get; set; }
+        public float Rotation { get; set; }
+
+
+
+
         public RenderBuffer Render {  get { return m_render; } }
 
         public SequenceRenderObject() : base ()
         {
+            Left = 0;
+            Top = 0;
+
+            Scale = 1;
+
+            Rotation = 0;
+
             m_render = new RenderBuffer();            
         }
 

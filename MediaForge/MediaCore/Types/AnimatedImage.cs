@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Graphics.Canvas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,7 @@ namespace MediaCore.Types
     {
         public TimeSpan Duration { get; set; }
         public TimeSpan StartTime { get; set; }
-        public ImageSource ImageSource { get; set; }
-        public SoftwareBitmap Render { get; set; }
+        public SoftwareBitmap ImageSource { get; set; }
     }
 
     public class AnimatedImage
@@ -33,7 +33,7 @@ namespace MediaCore.Types
 
         public ImageFrame GetFrame(TimeSpan time)
         {
-            return m_frames?.Where(x => x.StartTime < time).LastOrDefault();
+            return m_frames?.Where(x => time >= x.StartTime).LastOrDefault();
         }
     }
 }

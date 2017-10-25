@@ -13,6 +13,7 @@ namespace Sequence.Media
 
     using MediaCore.Decoder;
     using MediaCore.Types;
+    using Microsoft.Graphics.Canvas;
 
     public class SequenceAnimatedImage : SequenceImage
     {
@@ -25,7 +26,6 @@ namespace Sequence.Media
 
         override public async Task Load()
         {
-            await GetBitmap();
             await DecodeFrames();
             OnLoaded();
         }
@@ -51,13 +51,13 @@ namespace Sequence.Media
             if (frame == null)
                 return;
 
-            m_render.SetImageSource(frame.ImageSource);
+            // m_render.SetImageSource(frame.ImageSource);
         }
 
         public override SoftwareBitmap GetRenderData(TimeSpan time)
         {
             var localTime = time - StartTime;
-            return m_image.GetFrame(localTime).Render;            
+            return m_image.GetFrame(localTime).ImageSource;            
         }
     }
 }

@@ -22,12 +22,17 @@ namespace MediaForge
     using AudioEngine;
     using Microsoft.Graphics.Canvas;
     using Windows.UI;
+    using Windows.UI.Xaml.Shapes;
+    using Microsoft.Graphics.Canvas.Effects;
+    using System.Numerics;
 
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        bool m_need_init = true;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -35,19 +40,35 @@ namespace MediaForge
             Sequensor.Controller.Create();
             Sequensor.Controller.AddItem += (sender, item) =>
             {
-                if (item is Sequence.Render.SequenceRenderObject)
+                if (m_need_init && item is Sequence.Render.SequenceRenderObject)
                 {
                     W2D.Width = (item as Sequence.Render.SequenceRenderObject).Width;
                     W2D.Height = (item as Sequence.Render.SequenceRenderObject).Height;
 
                     canvas.Width = (item as Sequence.Render.SequenceRenderObject).Width;
                     canvas.Height = (item as Sequence.Render.SequenceRenderObject).Height;
+
+                    m_need_init = false;
                 }
 
                 var render = item as Sequence.Render.SequenceRenderObject;
                 if (render != null)
                 {
-                    canvas.Children.Add(render.Render);
+                    var rect = new TransformationBox()
+                    {
+                        Width = render.Width,
+                        Height = render.Height,
+                        Background = new SolidColorBrush(Colors.Transparent),
+                        BorderBrush = new SolidColorBrush(Colors.Red),
+                        BorderThickness = new Thickness(2),
+                        Render = render
+                    };
+
+                    rect.CompositeTransformChange += (s) => { 
+                        W2D.Invalidate();
+                    };
+
+                    canvas.Children.Add(rect);
                 }
             };
 
@@ -91,12 +112,21 @@ namespace MediaForge
             {
                 foreach(var render in layer)
                 {
-                    var cbi = CanvasBitmap.CreateFromSoftwareBitmap(
-                        session.Device,
-                        render
-                    );
+                    var cbi = CanvasBitmap.CreateFromSoftwareBitmap(session.Device, render.Source);
+                    ICanvasImage image = new Transform2DEffect
+                    {
+                        Source = cbi,
+                        TransformMatrix = render.Transformaion
+                    };
 
-                    session.DrawImage(cbi);
+                    var shadow = new ShadowEffect
+                    {
+                        Source = image,
+                        BlurAmount = 12
+                    };
+
+                    session.DrawImage(shadow);
+                    session.DrawImage(image);
                 }                
             }
         }
@@ -104,6 +134,27 @@ namespace MediaForge
         private void Render(object sender, RoutedEventArgs e)
         {
             W2D.Invalidate();
+        }
+
+        private async void OnTextEditor(object sender, RoutedEventArgs e)
+        {
+            var dlg = new MediaCore.Popup.TextCreationDialog();
+            await dlg.ShowAsync();
+
+            var soft = dlg.Result;
+            if (soft != null)
+            {
+                var sequence = Sequensor.Controller.Sequences.FirstOrDefault();
+                sequence.Add(new SequenceImage(soft) { Duration = new TimeSpan(0, 0, 2) });
+            }
+        }
+
+        private void OnCanvasShow(object sender, RoutedEventArgs e)
+        {
+            if (canvas.Visibility == Visibility.Visible)
+                canvas.Visibility = Visibility.Collapsed;
+            else
+                canvas.Visibility = Visibility.Visible;
         }
     }
 }

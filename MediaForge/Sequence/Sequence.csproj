@@ -153,6 +153,10 @@
       <Project>{0e3b0941-b5af-4bbc-8229-5c464e7a6954}</Project>
       <Name>MediaCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Render\Render.csproj">
+      <Project>{1b94cdbe-46e5-410d-864e-23a64e1aac1e}</Project>
+      <Name>Render</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
