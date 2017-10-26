@@ -30,22 +30,41 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <win2d:CanvasControl x:Name="canvas" ClearColor="White" Width="400" Height="80" Draw="OnDraw"/>
-        <TextBox x:Name="Text" Grid.Row="1" Margin="0,4,0,0" TextChanged="OnTextChanged"/>
-        <ComboBox x:Name="Fonts" Grid.Row="2">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <Border >
-                        <TextBlock 
-                            Text="{Binding FontFamilyName}" 
-                            FontFamily="{Binding FontFamily}"
+
+        <StackPanel Grid.Row="1">
+            <TextBox x:Name="TextValue"  Margin="0,4,0,0" TextChanged="OnTextChanged"/>
+            <ComboBox x:Name="Fonts"  SelectionChanged="OnFontFamilyChange">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="local:FontSetting">
+                        <Border >
+                            <TextBlock 
+                            Text="{x:Bind FontFamilyName}" 
+                            FontFamily="{x:Bind FontFamily}"
                             Margin="4"/>
-                    </Border>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+                        </Border>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Grid>
+                <TextBlock Text="Основные параметры" Foreground="LightGray" FontWeight="Light"/>
+            </Grid>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Обводка" Foreground="LightGray" Grid.Column="1" />
+                <ToggleSwitch VerticalAlignment="Center" Grid.Row="1" Toggled="OnOutlineToggled"/>
+                <Slider StepFrequency="0.05" Minimum="0.05" Maximum="10" Value="1" Grid.Row="2" ValueChanged="OnOutlineChange"/>                            
+            </Grid>
+        </StackPanel>        
+
     </Grid>
 </ContentDialog>

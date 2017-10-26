@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using System.Linq;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.Graphics.Canvas.Text;
 using Windows.UI;
@@ -27,164 +17,80 @@ using System.Numerics;
 
 namespace MediaCore.Popup
 {
+    using Render.Text;
+
+    public class FontSetting
+    {
+        public string FontFamilyName;
+        public FontFamily FontFamily;
+    }
+
     public sealed partial class TextCreationDialog : ContentDialog
     {
         public SoftwareBitmap Result { get; set; }
-
-        private async Task<SoftwareBitmap> RenderText()
-        {
-            Rect bounds;
-            var geometryRender = new CanvasRenderTarget(canvas, 400, 80);
-            using (var geometrySession = geometryRender.CreateDrawingSession())
-            {
-                geometrySession.Clear(Color.FromArgb(0, 0, 0, 0));
-                // Тут будут задаваться параметры
-                var format = new CanvasTextFormat()
-                {
-                    FontSize = 24,
-                    FontWeight = FontWeights.ExtraBlack,
-                    HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                    VerticalAlignment = CanvasVerticalAlignment.Center,
-                    WordWrapping = CanvasWordWrapping.Wrap,
-                    FontFamily = "Showcard Gothic"
-                };
-
-                using (CanvasTextLayout textLayout = new CanvasTextLayout(geometrySession, Text.Text, format, 400, 80))
-                {
-                    CanvasGeometry geometry = CanvasGeometry.CreateText(textLayout);
-                    CanvasStrokeStyle dashedStroke = new CanvasStrokeStyle()
-                    {
-                        DashStyle = CanvasDashStyle.Solid
-                    };
-
-                    bounds = geometry.ComputeStrokeBounds(2.0f);
-
-                    geometrySession.DrawTextLayout(textLayout, 0, 0, Colors.Red);
-                    geometrySession.DrawGeometry(geometry, Colors.White, 2.0f, dashedStroke);
-                }
-            }
-
-
-            CanvasBitmap bitmap = CanvasBitmap.CreateFromDirect3D11Surface(canvas, geometryRender, 96);
-
-
-            var resultRender = new CanvasRenderTarget(
-                canvas, 
-                (float)bounds.Width + 20, 
-                (float)bounds.Height + 20
-            );
-
-            using (var resultSession = resultRender.CreateDrawingSession())
-            {
-                resultSession.Clear(Color.FromArgb(0, 0, 0, 0));             
-
-                var shadow = new ShadowEffect
-                {
-                    Source = bitmap,
-                    BlurAmount = 1.0f
-                    
-                };
-
-                var transformMatrix = Matrix3x2.CreateTranslation(new Vector2(
-                        10 - (float)bounds.Left,
-                        10 - (float)bounds.Top
-                    ));
-
-                Transform2DEffect translate;
-                translate = new Transform2DEffect
-                {
-                    Source = shadow,
-                    TransformMatrix = transformMatrix
-                };
-                resultSession.DrawImage(translate);
-
-                translate = new Transform2DEffect
-                {
-                    Source = bitmap,
-                    TransformMatrix = transformMatrix
-                };
-                resultSession.DrawImage(translate);
-            }
-
-            return await SoftwareBitmap.CreateCopyFromSurfaceAsync(resultRender);
-        }
-
+        TextRenderSettings settings = new TextRenderSettings();
 
         public TextCreationDialog()
         {
             this.InitializeComponent();
-            Fonts.ItemsSource = CanvasTextFormat.GetSystemFontFamilies().Select(x => new
+            Fonts.ItemsSource = CanvasTextFormat.GetSystemFontFamilies().Select(x => new FontSetting
             {
                 FontFamilyName = x,
                 FontFamily = new FontFamily(x)
-            });
+            });     
         }
 
         private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            Result = await RenderText();
+            Result = await TextRender.RenderToSoftwareBitmap(canvas, settings);
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-        }
-
-        private void canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
         {
 
         }
 
         private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var text = Text.Text;
+            var text = TextValue.Text;           
+
             if (string.IsNullOrEmpty(text))
                 return;
 
+            var cbi = TextRender.Render(canvas, settings);
             var session = args.DrawingSession;
             session.Clear(sender.ClearColor);
-
-            var textBitmap = new CanvasRenderTarget(sender, 400, 80);
-            using (var drawingSession = textBitmap.CreateDrawingSession())
-            {
-                drawingSession.Clear(Color.FromArgb(0, 0, 0, 0));
-
-                var format = new CanvasTextFormat()
-                {
-                    FontSize = 32,
-                    FontWeight = FontWeights.ExtraBlack,
-                    HorizontalAlignment = CanvasHorizontalAlignment.Center,
-                    VerticalAlignment = CanvasVerticalAlignment.Center,
-                    WordWrapping = CanvasWordWrapping.Wrap,
-                    FontFamily = "Showcard Gothic"                    
-                };
-
-                using (CanvasTextLayout textLayout = new CanvasTextLayout(session, text, format, 400, 80))
-                {
-                    CanvasGeometry geometry = CanvasGeometry.CreateText(textLayout);
-
-                    CanvasStrokeStyle dashedStroke = new CanvasStrokeStyle()
-                    {
-                        DashStyle = CanvasDashStyle.Solid
-                    };
-
-                    drawingSession.DrawTextLayout(textLayout, 0, 0, Colors.Red);
-                    drawingSession.DrawGeometry(geometry, Colors.White, 2.0f, dashedStroke);
-
-                }
-            }
-
-            var shadow = new ShadowEffect
-            {
-                Source = textBitmap,
-                BlurAmount = 1
-            };
-
-            session.DrawImage(shadow);
-            session.DrawImage(textBitmap);
+            session.DrawImage(cbi);            
         }
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            settings.Text = TextValue.Text;
+            canvas.Invalidate();
+        }
+
+        private void OnFontFamilyChange(object sender, SelectionChangedEventArgs e)
+        {
+            var cb = sender as ComboBox;
+            settings.FontFamily = (cb.SelectedItem as FontSetting).FontFamily;
+            canvas.Invalidate();
+        }
+
+        private void OnOutlineChange(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            /*
+            if (m_render_text_setting == null)
+                return;
+
+            m_render_text_setting.StrokeWidth = (float)e.NewValue;
+            canvas.Invalidate();
+            */
+        }
+
+        private void OnOutlineToggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var toggle = sender as ToggleSwitch;
+            settings.OutlineTextSettings.Enabled = toggle?.IsOn ?? false;
             canvas.Invalidate();
         }
     }

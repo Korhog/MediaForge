@@ -109,6 +109,8 @@
     <Compile Include="RenderEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Drawing\RenderObjectBase.cs" />
+    <Compile Include="EffectSettings\ShadowEffectSettings.cs" />
+    <Compile Include="Text\TextRender.cs" />
     <EmbeddedResource Include="Properties\Render.rd.xml" />
   </ItemGroup>
   <ItemGroup>
