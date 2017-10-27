@@ -25,6 +25,7 @@ namespace MediaForge
     using Windows.UI.Xaml.Shapes;
     using Microsoft.Graphics.Canvas.Effects;
     using System.Numerics;
+    using Project;
 
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
@@ -49,6 +50,8 @@ namespace MediaForge
                     canvas.Height = (item as Sequence.Render.SequenceRenderObject).Height;
 
                     m_need_init = false;
+
+                    VideoProject.GetInstance().FPS = MediaCore.Types.FPS.FPS10;
                 }
 
                 var render = item as Sequence.Render.SequenceRenderObject;

@@ -21,7 +21,8 @@ using System.Numerics;
 
 namespace Sequence
 {
-    
+    using Project;
+
 
     public enum SequenceControllerState
     {
@@ -38,6 +39,8 @@ namespace Sequence
          * Тут мы временно добаляем аудио дорожку до тех пор, пока не появится 
          * движок с использованием аудио графа
          */
+
+        VideoProject m_project;
 
         MediaPlayer m_media_player;
         public void SetAudioTrack(StorageFile source)
@@ -86,6 +89,7 @@ namespace Sequence
 
             sequence.AddItem += (sender, o) =>
             {
+                m_animator.Stop();
                 AddItem?.Invoke(this, o);
             };
 
@@ -94,6 +98,8 @@ namespace Sequence
 
         public SequenceControllerBase()
         {
+            m_project = VideoProject.GetInstance();
+
             m_sequences = new ObservableCollection<SequenceBase>();
             m_names = new ObservableCollection<string>();
 
@@ -104,9 +110,28 @@ namespace Sequence
             da.To = 600;
             da.Duration = new Duration(TimeSpan.FromSeconds(20));
             da.EnableDependentAnimation = true;
-
             m_animator.Children.Add(da);
             Storyboard.SetTargetProperty(m_animator, "Value");
+
+            m_project.SettingsChanged += (project) =>
+            {
+                // Обновление настроек
+                int frames = 20000 / (int)project.FPS;
+                int mills = frames * (int)project.FPS;
+
+                m_animator.Children.Clear();
+                m_slider.Maximum = frames;
+
+                var animation = new DoubleAnimation();
+
+                animation.From = 0;
+                animation.To = frames;
+
+                animation.Duration = new Duration(TimeSpan.FromMilliseconds(mills));
+                animation.EnableDependentAnimation = true;
+
+                m_animator.Children.Add(da);
+            };
         }
 
         public virtual void SetSlider(Slider slider)
@@ -116,7 +141,6 @@ namespace Sequence
                 if (m_slider != null)
                 {
                     m_slider.ValueChanged -= OnFrame;
-
                 }
                 return;
             }
@@ -170,7 +194,10 @@ namespace Sequence
 
         public RenderObjectBase[][] GetRenderObjects()
         {
-            var time = new TimeSpan((long)(m_slider.Value / 30 * 10000000));
+            var fps = (int)VideoProject.GetInstance().FPS;
+            var frame = (int)m_slider.Value;
+
+            var time = TimeSpan.FromMilliseconds(frame * fps);
             var layers = m_sequences
                 .OrderByDescending(x => m_sequences.IndexOf(x))
                 .Select(x => x.Items

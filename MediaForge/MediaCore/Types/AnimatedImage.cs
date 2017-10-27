@@ -9,6 +9,17 @@ using Windows.UI.Xaml.Media;
 
 namespace MediaCore.Types
 {
+    public enum FPS
+    {
+        FPS10 = 100,
+        FPS12 = 83,
+        FPS15 = 67,
+        FPS24 = 42,
+        FPS30 = 33,
+        FPS60 = 16,
+        FPS120 = 8
+    }
+
     public class ImageFrame
     {
         public TimeSpan Duration { get; set; }
