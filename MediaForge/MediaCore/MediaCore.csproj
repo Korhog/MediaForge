@@ -107,6 +107,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Decoder\Decoder.cs" />
+    <Compile Include="Encoder\Encoder.cs" />
+    <Compile Include="Encoder\IFrameData.cs" />
     <Compile Include="Popup\TextCreationDialog.xaml.cs">
       <DependentUpon>TextCreationDialog.xaml</DependentUpon>
     </Compile>

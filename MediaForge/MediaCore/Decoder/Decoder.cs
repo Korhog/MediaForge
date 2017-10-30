@@ -88,8 +88,9 @@ namespace MediaCore.Decoder
                 var frame = await decoder.GetFrameAsync(frameIdx);
                 
                 // Получаем длительность кадра
-                var prop = await frame.BitmapProperties.GetPropertiesAsync(props);
-                delay = TimeSpan.FromMilliseconds(10 * (UInt16)prop.FirstOrDefault().Value.Value);
+                var propSet = await frame.BitmapProperties.GetPropertiesAsync(props);
+                var prop = propSet.FirstOrDefault();
+                delay = TimeSpan.FromMilliseconds(10 * (UInt16)prop.Value.Value);
                 if (delay.Ticks == 0)
                     delay = TimeSpan.FromMilliseconds(100);                
 

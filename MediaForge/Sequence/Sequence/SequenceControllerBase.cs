@@ -22,7 +22,9 @@ using System.Numerics;
 namespace Sequence
 {
     using Project;
-
+    using MediaCore.Encoder;
+    using MediaCore.Types;
+    using global::Render;
 
     public enum SequenceControllerState
     {
@@ -33,7 +35,7 @@ namespace Sequence
         PAUSE
     }
 
-    public class SequenceControllerBase
+    public class SequenceControllerBase : IFrameData
     {
         /*
          * Тут мы временно добаляем аудио дорожку до тех пор, пока не появится 
@@ -152,7 +154,7 @@ namespace Sequence
             m_slider.ValueChanged += OnFrame;
             Storyboard.SetTarget(m_animator, m_slider);
             m_controller_state = SequenceControllerState.RESET;
-        }  
+        }
 
         public void Play()
         {
@@ -167,7 +169,7 @@ namespace Sequence
                     PlayAudio(time);
                     break;
                 case SequenceControllerState.READY:
-                    m_controller_state = SequenceControllerState.PLAY;                    
+                    m_controller_state = SequenceControllerState.PLAY;
                     m_animator.Begin();
                     PlayAudio(time);
                     break;
@@ -190,13 +192,11 @@ namespace Sequence
         protected virtual void OnFrame(object sender, RangeBaseValueChangedEventArgs e)
         {
             OnDraw?.Invoke();
-        }  
+        }
 
-        public RenderObjectBase[][] GetRenderObjects()
+        public RenderObjectBase[][] GetRenderObjects(int frame)
         {
             var fps = (int)VideoProject.GetInstance().FPS;
-            var frame = (int)m_slider.Value;
-
             var time = TimeSpan.FromMilliseconds(frame * fps);
             var layers = m_sequences
                 .OrderByDescending(x => m_sequences.IndexOf(x))
@@ -214,6 +214,36 @@ namespace Sequence
                 .ToArray();
 
             return layers;
-        }  
+        }
+        
+        
+
+        public RenderObjectBase[][] GetRenderObjects()
+        {
+            var frame = (int)m_slider.Value;
+            return GetRenderObjects(frame);
+        }
+
+        public async Task<ImageFrame> GetFrameToEncode(int idx)
+        {
+            var softwareBitmap = await FrameRender.Render(GetRenderObjects(idx));
+            return new ImageFrame()
+            {
+                ImageSource = softwareBitmap
+            };
+        }
+
+        public int GetFramesCount()
+        {
+            var lastItems = m_sequences
+                .Where(x => x.Items.Count > 0)
+                .Select(x => x.Items.LastOrDefault())
+                .ToList();
+
+
+            int duration = lastItems.Count == 0 ? 0 : (int)lastItems.Select(x => x.StartTime + x.Duration).Select(x => x.TotalMilliseconds).Max();
+
+            return duration / (int)m_project.FPS;      
+        }
     }
 }

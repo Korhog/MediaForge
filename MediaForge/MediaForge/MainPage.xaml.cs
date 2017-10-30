@@ -26,6 +26,7 @@ namespace MediaForge
     using Microsoft.Graphics.Canvas.Effects;
     using System.Numerics;
     using Project;
+    using MediaCore.Encoder;
 
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
@@ -115,6 +116,7 @@ namespace MediaForge
             var layers = Sequensor.Controller.GetRenderObjects();
             foreach(var layer in layers)
             {
+                var l = layer;
                 foreach(var render in layer)
                 {
                     var cbi = CanvasBitmap.CreateFromSoftwareBitmap(session.Device, render.Source);
@@ -152,6 +154,11 @@ namespace MediaForge
                 canvas.Visibility = Visibility.Collapsed;
             else
                 canvas.Visibility = Visibility.Visible;
+        }
+
+        private async void OnEncode(object sender, RoutedEventArgs e)
+        {
+            await Encoder.EncodeGif(Sequensor.Controller);
         }
     }
 }

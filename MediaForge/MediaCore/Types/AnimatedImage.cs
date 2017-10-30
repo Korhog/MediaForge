@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Media;
 
 namespace MediaCore.Types
 {
+    /// <summary> Длительность кадра в миллисекундах </summary>
     public enum FPS
     {
         FPS10 = 100,
