@@ -44,11 +44,14 @@ namespace MediaForge
             {
                 if (m_need_init && item is Sequence.Render.SequenceRenderObject)
                 {
-                    W2D.Width = (item as Sequence.Render.SequenceRenderObject).Width;
-                    W2D.Height = (item as Sequence.Render.SequenceRenderObject).Height;
+                    var w = (item as Sequence.Render.SequenceRenderObject).Width;
+                    var h = (item as Sequence.Render.SequenceRenderObject).Height;
 
-                    canvas.Width = (item as Sequence.Render.SequenceRenderObject).Width;
-                    canvas.Height = (item as Sequence.Render.SequenceRenderObject).Height;
+                    W2D.Width = w == 0 ? 400 : w;
+                    W2D.Height = h == 0 ? 300 : h;
+
+                    canvas.Width = w == 0 ? 400 : w;
+                    canvas.Height = h == 0 ? 300 : h;
 
                     m_need_init = false;
 
@@ -111,10 +114,14 @@ namespace MediaForge
             var session = args.DrawingSession;
             session.Clear(Colors.DarkSlateBlue);
 
-            var dpi = Windows.Graphics.Display.DisplayProperties.LogicalDpi; 
+            var dpi = Windows.Graphics.Display.DisplayProperties.LogicalDpi;
 
-            var layers = Sequensor.Controller.GetRenderObjects();
-            foreach(var layer in layers)
+            var awaiter = Sequensor.Controller.GetRenderObjects();
+            awaiter.Wait();
+
+            var layers = awaiter.Result;
+
+            foreach (var layer in layers)
             {
                 var l = layer;
                 foreach(var render in layer)

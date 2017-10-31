@@ -107,8 +107,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Decoder\Decoder.cs" />
+    <Compile Include="Decoder\Decoder.H246.cs" />
+    <Compile Include="Decoder\IDecoder.cs" />
     <Compile Include="Encoder\Encoder.cs" />
     <Compile Include="Encoder\IFrameData.cs" />
+    <Compile Include="FrameSource\Frame.cs" />
+    <Compile Include="FrameSource\FrameData.cs" />
+    <Compile Include="FrameSource\IFrameSource.cs" />
+    <Compile Include="FrameSource\Video\FrameSet.cs" />
+    <Compile Include="MediaCore.cs" />
     <Compile Include="Popup\TextCreationDialog.xaml.cs">
       <DependentUpon>TextCreationDialog.xaml</DependentUpon>
     </Compile>

@@ -25,6 +25,7 @@ namespace Sequence
     using MediaCore.Encoder;
     using MediaCore.Types;
     using global::Render;
+    using Sequence.Render;
 
     public enum SequenceControllerState
     {
@@ -194,39 +195,51 @@ namespace Sequence
             OnDraw?.Invoke();
         }
 
-        public RenderObjectBase[][] GetRenderObjects(int frame)
+        public async Task<RenderObjectBase[][]> GetRenderObjects(int frame)
         {
             var fps = (int)VideoProject.GetInstance().FPS;
             var time = TimeSpan.FromMilliseconds(frame * fps);
-            var layers = m_sequences
-                .OrderByDescending(x => m_sequences.IndexOf(x))
-                .Select(x => x.Items
-                    .Where(y => y is Render.SequenceRenderObject && time >= y.StartTime && time < y.StartTime + y.Duration)
-                    .Select(y => y as Render.SequenceRenderObject)
-                    .Select(y => new RenderObjectBase()
-                    {
-                        Source = y.GetRenderData(time),
-                        Position = new Vector2((float)y.Left, (float)y.Top),
-                        Scale = y.Scale
-                    })
-                    .ToArray()
-                )
-                .ToArray();
 
-            return layers;
+            List<RenderObjectBase[]> source = new List<RenderObjectBase[]>();
+            foreach (var sequence in m_sequences)
+            {
+                var items = sequence.Items.Where(x =>
+                        x is SequenceRenderObject &&
+                        time >= x.StartTime &&
+                        time < x.StartTime + x.Duration
+                    )
+                    .Select(x => x as SequenceRenderObject)
+                    .ToList();
+
+                if (items.Any())
+                {
+                    List<RenderObjectBase> renders = new List<RenderObjectBase>();
+                    foreach (var item in items)
+                    {
+                        renders.Add(new RenderObjectBase
+                        {
+                            Source = await item.GetRenderData(time),
+                            Position = new Vector2((float)item.Left, (float)item.Top),
+                            Scale = item.Scale
+                        });
+                    }
+                    source.Add(renders.ToArray());
+                }
+            }
+            return source.ToArray();
         }
         
         
 
-        public RenderObjectBase[][] GetRenderObjects()
+        public async Task<RenderObjectBase[][]> GetRenderObjects()
         {
             var frame = (int)m_slider.Value;
-            return GetRenderObjects(frame);
+            return await GetRenderObjects(frame);
         }
 
         public async Task<ImageFrame> GetFrameToEncode(int idx)
         {
-            var softwareBitmap = await FrameRender.Render(GetRenderObjects(idx));
+            var softwareBitmap = await FrameRender.Render(await GetRenderObjects(idx));
             return new ImageFrame()
             {
                 ImageSource = softwareBitmap

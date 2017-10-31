@@ -133,5 +133,7 @@ namespace MediaCore.Decoder
                 Height = decoder.PixelHeight
             };
         }
+
+
     }    
 }

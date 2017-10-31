@@ -112,6 +112,7 @@
     <Compile Include="Sequence\Input\SequenceBase.cs" />
     <Compile Include="Sequence\Input\SequenceBaseObject.cs" />
     <Compile Include="Sequence\Media\SequenceAnimatedImage.cs" />
+    <Compile Include="Sequence\Media\SequenceFrameSet.cs" />
     <Compile Include="Sequence\Render\SequenceBaseObject.cs" />
     <Compile Include="Sequence\Render\SequenceRenderObject.cs" />
     <Compile Include="Sequence\SequenceControllerBase.cs" />

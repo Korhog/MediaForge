@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
 using Windows.Graphics.Imaging;
 
 namespace MediaCore.Encoder
@@ -56,5 +54,20 @@ namespace MediaCore.Encoder
 
             return new EncodeResult { Success = true };
         }
+
+        public static async Task<EncodeResult> EncodeMp4(IFrameData frameData)
+        {
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+
+            savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            savePicker.FileTypeChoices.Add("MP4", new List<string>() { ".mp4" });
+            savePicker.SuggestedFileName = "video";
+
+            var file = await savePicker.PickSaveFileAsync();
+            if (file == null)
+                return new EncodeResult { Success = false };
+            
+            return new EncodeResult { Success = true };
+        }    
     }
 }

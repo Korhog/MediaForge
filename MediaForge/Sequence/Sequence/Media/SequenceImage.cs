@@ -94,7 +94,7 @@ namespace Sequence.Media
             Template.Content = image;
         }
 
-        public override SoftwareBitmap GetRenderData(TimeSpan time)
+        public override async Task<SoftwareBitmap> GetRenderData(TimeSpan time)
         {
             return m_render_source;
         }

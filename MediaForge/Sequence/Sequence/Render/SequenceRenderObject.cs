@@ -57,7 +57,7 @@ namespace Sequence.Render
 
         }
 
-        public virtual SoftwareBitmap GetRenderData(TimeSpan time)
+        public virtual async Task<SoftwareBitmap> GetRenderData(TimeSpan time)
         {
             return null;
         }

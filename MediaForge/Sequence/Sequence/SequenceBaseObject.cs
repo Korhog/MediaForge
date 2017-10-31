@@ -11,6 +11,7 @@ namespace Sequence
     using System;
     using System.Threading.Tasks;
     using UI;
+    using Windows.Storage;
 
     public enum TransformationTarget
     {

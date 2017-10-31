@@ -32,7 +32,7 @@ namespace Sequence.Media
 
         protected virtual async Task DecodeFrames()
         {
-            m_image = await Decoder.DecodeAnimatedImage(m_source, Microsoft.Graphics.Canvas.CanvasBitmapFileFormat.Gif);
+            m_image = await Decoder.DecodeAnimatedImage(m_source, CanvasBitmapFileFormat.Gif);
 
             Width = m_image.Width;
             Height = m_image.Height;
@@ -54,7 +54,7 @@ namespace Sequence.Media
             // m_render.SetImageSource(frame.ImageSource);
         }
 
-        public override SoftwareBitmap GetRenderData(TimeSpan time)
+        public override async Task<SoftwareBitmap> GetRenderData(TimeSpan time)
         {
             var localTime = time - StartTime;
             return m_image.GetFrame(localTime).ImageSource;            
