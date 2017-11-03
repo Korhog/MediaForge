@@ -27,6 +27,7 @@ namespace MediaForge
     using System.Numerics;
     using Project;
     using MediaCore.Encoder;
+    using Windows.Media.Core;
 
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
@@ -40,25 +41,28 @@ namespace MediaForge
             this.InitializeComponent();
 
             Sequensor.Controller.Create();
-            Sequensor.Controller.AddItem += (sender, item) =>
+            Sequensor.Controller.AddItem += async (sender, item) =>
             {
                 if (m_need_init && item is Sequence.Render.SequenceRenderObject)
                 {
                     var w = (item as Sequence.Render.SequenceRenderObject).Width;
                     var h = (item as Sequence.Render.SequenceRenderObject).Height;
 
-                    W2D.Width = w == 0 ? 400 : w;
-                    W2D.Height = h == 0 ? 300 : h;
-
-                    canvas.Width = w == 0 ? 400 : w;
-                    canvas.Height = h == 0 ? 300 : h;
-
                     m_need_init = false;
+                    await VideoProject.GetInstance().SetSettings((int)w, (int)h, MediaCore.Types.FPS.FPS10);
 
-                    VideoProject.GetInstance().FPS = MediaCore.Types.FPS.FPS10;
+                    w = VideoProject.GetInstance().Width;
+                    h = VideoProject.GetInstance().Heigth;
+
+                    W2D.Width = w;
+                    W2D.Height = h;
+
+                    canvas.Width = w;
+                    canvas.Height = h;
                 }
 
                 var render = item as Sequence.Render.SequenceRenderObject;
+                
                 if (render != null)
                 {
                     var rect = new TransformationBox()
@@ -88,7 +92,6 @@ namespace MediaForge
         private void OnStart(object sender, RoutedEventArgs e)
         {
             Sequensor.Play();
-
         }
 
         private async void OnWave(object sender, RoutedEventArgs e)
@@ -116,10 +119,7 @@ namespace MediaForge
 
             var dpi = Windows.Graphics.Display.DisplayProperties.LogicalDpi;
 
-            var awaiter = Sequensor.Controller.GetRenderObjects();
-            awaiter.Wait();
-
-            var layers = awaiter.Result;
+            var layers = Sequensor.Controller.CachedFrame;
 
             foreach (var layer in layers)
             {

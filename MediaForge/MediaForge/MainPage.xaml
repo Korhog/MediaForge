@@ -33,7 +33,7 @@
             <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="4" Click="OnCanvasShow">
                 <FontIcon Foreground="White" Glyph="&#xE156;" IsHitTestVisible="False"/>
             </Button>
-        </Grid>   
+        </Grid>
 
         <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Grid.Row="1" Background="BlanchedAlmond" Padding="2" >
             <Button Content="Start" Click="OnStart" Margin="2"/>

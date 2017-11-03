@@ -1,0 +1,20 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MForge.Sequensor.UIControls" >
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MForge.Sequensor/Themes/SceneControl.xaml"/>
+        <ResourceDictionary Source="/MForge.Sequensor/Themes/SequensorControl.xaml"/>
+        
+    </ResourceDictionary.MergedDictionaries>
+  
+    <Style TargetType="local:SequensorControl" >
+        <Setter Property="Template" Value="{StaticResource ResourceKey=SequensorControl}"/>
+    </Style>
+
+    <!-- SceneControl -->
+    <Style TargetType="local:SceneControl" >
+        <Setter Property="Template" Value="{StaticResource ResourceKey=SceneControl}"/>
+    </Style>
+</ResourceDictionary>

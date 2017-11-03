@@ -157,6 +157,8 @@ namespace Sequence
             m_controller_state = SequenceControllerState.RESET;
         }
 
+        private int? m_current_frame = null;
+
         public void Play()
         {
             var animation = m_animator.Children[0] as DoubleAnimation;
@@ -190,12 +192,20 @@ namespace Sequence
             }
         }
 
-        protected virtual void OnFrame(object sender, RangeBaseValueChangedEventArgs e)
+        RenderObjectBase[][] m_cache_frame = new RenderObjectBase[0][];
+        public RenderObjectBase[][] CachedFrame { get { return m_cache_frame; } }
+
+        protected virtual async void OnFrame(object sender, RangeBaseValueChangedEventArgs e)
         {
-            OnDraw?.Invoke();
+            if (m_current_frame.HasValue && m_current_frame.Value != (int)m_slider.Value)
+            {
+                await GetRenderObjects();
+                OnDraw?.Invoke();
+            }
+            m_current_frame = (int)m_slider.Value;
         }
 
-        public async Task<RenderObjectBase[][]> GetRenderObjects(int frame)
+        public async Task GetRenderObjects(int frame)
         {
             var fps = (int)VideoProject.GetInstance().FPS;
             var time = TimeSpan.FromMilliseconds(frame * fps);
@@ -226,20 +236,23 @@ namespace Sequence
                     source.Add(renders.ToArray());
                 }
             }
-            return source.ToArray();
-        }
-        
-        
 
-        public async Task<RenderObjectBase[][]> GetRenderObjects()
+            lock (m_cache_frame)
+            {
+                m_cache_frame = source.ToArray();
+            }
+        }  
+
+        public async Task GetRenderObjects()
         {
             var frame = (int)m_slider.Value;
-            return await GetRenderObjects(frame);
+            await GetRenderObjects(frame);
         }
 
         public async Task<ImageFrame> GetFrameToEncode(int idx)
         {
-            var softwareBitmap = await FrameRender.Render(await GetRenderObjects(idx));
+            await GetRenderObjects(idx);
+            var softwareBitmap = await FrameRender.Render(m_cache_frame);
             return new ImageFrame()
             {
                 ImageSource = softwareBitmap

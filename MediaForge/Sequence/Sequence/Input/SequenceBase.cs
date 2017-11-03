@@ -5,6 +5,7 @@ namespace Sequence
 {
     using Media;
     using Windows.ApplicationModel.DataTransfer;
+    using Windows.Media.Editing;
     using Windows.Storage;
 
     /// <summary>
@@ -38,6 +39,10 @@ namespace Sequence
                         {
                             Duration = new TimeSpan(0, 0, 1)
                         });
+
+                        var mforge = MForge.MediaEngine.GetInstance();
+                        MediaClip clip = await MediaClip.CreateFromFileAsync(storageFile);
+                        mforge.Layers[0].AddClip(clip);
                     }
                     else
                     {

@@ -11,6 +11,7 @@ namespace MediaCore.Decoder
     using Windows.Media.Editing;
     using Windows.Storage;
     using Windows.Storage.Streams;
+    using Windows.UI;
     using Windows.UI.Xaml.Media.Imaging;
 
     public class H246 : IDecoder
@@ -67,6 +68,12 @@ namespace MediaCore.Decoder
         public async Task<MediaComposition> GetMediaComposition(StorageFile source)
         {
             MediaClip clip = await MediaClip.CreateFromFileAsync(source);
+       
+            clip.VideoEffectDefinitions.Add(
+                new Windows.Media.Effects.VideoEffectDefinition(typeof(MForge.VideoEffects.BlurEffect).FullName)
+            );
+
+
             var props = clip.GetVideoEncodingProperties();
             var frameMilliseconts = 1000.0f / ((float)props.FrameRate.Numerator / (float)props.FrameRate.Denominator);
             var frameCount = (int)(clip.OriginalDuration.TotalMilliseconds / frameMilliseconts);
@@ -74,7 +81,11 @@ namespace MediaCore.Decoder
             var fps = MediaHelper.MillisecondsToFPS((long)frameMilliseconts);
 
             MediaComposition composition = new MediaComposition();
-            composition.Clips.Add(clip);
+            MediaClip wait = MediaClip.CreateFromColor(Colors.Black, TimeSpan.FromSeconds(2));
+
+            composition.Clips.Add(wait);
+            composition.Clips.Add(clip);            
+
             return composition;
         }
 
@@ -100,6 +111,11 @@ namespace MediaCore.Decoder
                     BitmapAlphaMode.Premultiplied);
                 return bitmap;
             }
+        }
+
+        void T()
+        {
+            MediaOverlay over = new MediaOverlay(null);
         }
     }
 }

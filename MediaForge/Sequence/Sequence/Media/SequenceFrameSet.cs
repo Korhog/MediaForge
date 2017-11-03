@@ -15,6 +15,7 @@ namespace Sequence.Media
     {
         StorageFile m_source;
         MediaComposition m_comp;
+        public MediaComposition Composition { get { return m_comp; } }
         IFrameSource m_frame_set;
         public SequenceFrameSet(StorageFile source)
         {
@@ -34,7 +35,7 @@ namespace Sequence.Media
             Width = 400;
             Height = 300;
 
-            Duration = TimeSpan.FromSeconds(5);
+            Duration = m_comp.Duration;
             OnLoaded();
         }
     }
