@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sequence\IRenderSequenceElement.cs" />
     <Compile Include="Sequence\ISequenceElement.cs" />
     <Compile Include="Sequence\Scene.cs" />
     <Compile Include="Sequence\SceneController.cs" />

@@ -12,11 +12,12 @@ namespace Animation
     using Windows.UI.Xaml.Media;
     using Windows.UI;
     using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml;
 
     class Element : IPhysicalAnimation
     {
         bool done = false;
-        float max = 5;
+        float max = 55;
 
         Rectangle rect;
         public Rectangle Rect { get { return rect; } }
@@ -34,7 +35,7 @@ namespace Animation
         Vector2 position;
 
         public Vector2 Force { get; set; } = new Vector2(0, 0);
-        public Vector2 Gravity { get; set; } = new Vector2(0, 9.8f);
+        public Vector2 Gravity { get; set; } = new Vector2(0, 150.0f);
         public Vector2 Velosity { get; set; } = new Vector2(0, 0);
 
         public float MaxSpeed { get { return max; } }
@@ -44,29 +45,43 @@ namespace Animation
         public void Reset()
         {
             position = new Vector2(100, -100);
-            Velosity = new Vector2(0, MaxSpeed);
+            Velosity = new Vector2(0, 0);
             Canvas.SetTop(rect, position.Y);
             Canvas.SetLeft(rect, 200);
             done = false;
         }
 
-        public void Update(TimeSpan delta)
+        public void Update(TimeSpan time)
         {
-            Velosity += (Gravity / 5);
-            if (Velosity.Length() > MaxSpeed)
-                Velosity = new Vector2(0, MaxSpeed);
+            var delta = time.Ticks;
+            if (done)
+                return;
 
-            position += Velosity;
+            var k = (float)delta / (float)TimeSpan.TicksPerSecond;
+
+            Velosity += (Gravity * k);
+            position += Velosity * k;
 
             if (position.Y > 100)
             {
+
                 position.Y = 100;
-                Velosity *= -1f;
+                // done = true;
+                Velosity *= -0.3f;
             }
 
             Canvas.SetTop(rect, position.Y); 
         }
 
-        public bool IsDone() { return done; }
+        public void ComputDuration()
+        {
+            /// Вычисление длительности анимации.
+        }
+
+        public void SetTarget(FrameworkElement frameworkElement)
+        {
+        }
+
+        public bool IsDone { get { return done; } }
     }
 }

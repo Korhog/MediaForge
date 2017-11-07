@@ -11,12 +11,15 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Canvas x:Name="canvas" Background="Gray" Width="800" Height="600"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+        <Slider x:Name="slider"  Grid.Row="1" Maximum="1000" />
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
             <Button Content="Reset" Click="OnReset" Margin="2"/>
             <Button Content="Step" Click="OnStep"  Margin="2"/>
+            <Button Content="Play" Click="OnPlay"  Margin="2"/>
         </StackPanel>
 
     </Grid>
