@@ -42,6 +42,9 @@ namespace MForge.Sequensor.UIControls
 
         public void SetScene(Scene scene)
         {
+            if (scene == null)
+                return;
+
             controller = scene.Sequensor;
             if (items != null)
             {

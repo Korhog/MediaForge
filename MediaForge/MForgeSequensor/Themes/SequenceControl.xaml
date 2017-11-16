@@ -12,9 +12,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:SequenceControl">
                     <Border
-                            Margin="2,2,2,0"
-                            BorderBrush="DarkGreen"
-                            BorderThickness="2">
+                            Margin="0,0,0,2"
+                            Background="#2e5266">
+                        
                         <ItemsControl Name="Items">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
