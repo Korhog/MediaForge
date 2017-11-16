@@ -56,16 +56,34 @@
                                     ReorderMode="Enabled" 
                                     AllowDrop="True"
                                     CanDragItems="True" >
+
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListViewItem">
+                                                        <ListViewItemPresenter
+                                                            SelectedBackground="#993955"
+                                                            SelectedPointerOverBackground="#993955"
+                                                            
+                                                            
+                                                            />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>                                   
+                                    
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid>
+                                            <Grid Margin="2, 2, 2, 0">
                                                 <Grid.RowDefinitions>                            
                                                     <RowDefinition/>
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
                                                 
-                                                <Border Margin="4" Grid.RowSpan="2" Height="80"/>
-                                                <Border Margin="4" Grid.Row="1" Height="30">
+                                                <Border Grid.RowSpan="2" Height="80" Background="#2D2D2D"/>
+                                                <Border Grid.Row="1" Height="30">
                                                     <Border.Background>
                                                         <AcrylicBrush 
                                                             TintOpacity="0.8" 
