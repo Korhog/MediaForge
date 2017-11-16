@@ -17,36 +17,38 @@ namespace MForge.Animator.BeginAnimations
             Canvas.SetTop(target, position.Y);
             Canvas.SetLeft(target, 200);
             done = false;
+            ComputDuration();
         }
+
+
 
         protected override void Update(float delta, bool forward)
         {
-            if (forward)
+            if (timespan.HasValue && startTime.HasValue)
             {
-                Velosity += (Gravity * delta);
-                position += Velosity * delta;
+                var d = (timespan.Value - startTime.Value).Ticks / (float)TimeSpan.TicksPerSecond;
 
-                if (position.Y > 100)
+                d *= 5.0f;
+
+                var pos = position.Y + (Gravity.Y * Math.Pow(d, 2)) / 2.0;
+
+                if (pos >= 100)
                 {
-
-                    position.Y = 100;
-                    // done = true;
-                    Velosity *= -0.3f;
+                    pos = 100;
                 }
-            }
-            else
-            {                
-                position -= Velosity * delta;
-                if (position.Y > 100)
-                {
-                    position.Y = 100;
-                    // done = true;
-                    Velosity /= -0.3f;
-                }
-                Velosity -= (Gravity * delta);
-            }
 
-            Canvas.SetTop(target, position.Y);
+                Canvas.SetTop(target, pos);
+            }
+        }
+
+        public override void ComputDuration()
+        {
+            base.ComputDuration();
+
+            var deltaPos = 100 - position.Y;
+
+            var aTime = Math.Sqrt((2 * deltaPos) / Gravity.Y) * (double)TimeSpan.TicksPerSecond / 5.0f;
+            var time = TimeSpan.FromTicks((long)aTime);
         }
     }
 }

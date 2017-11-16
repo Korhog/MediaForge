@@ -18,15 +18,16 @@
 
     <Grid Background="{StaticResource ResourceKey=MainThemeBackground}">       
         <Grid.RowDefinitions>
-            <RowDefinition MinHeight="500"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         
         <Border x:Name="PreviewBorder" 
                 CornerRadius="3"
                 Background="{StaticResource ResourceKey=MainThemeLight1}"
+                Margin="20"
                 Width="400" 
-                Height="400"/>
+                Height="250"/>
 
         <Border Background="{StaticResource ResourceKey=MainThemeDark1}" 
                 Grid.Row="1" 
@@ -37,13 +38,16 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <sequence:SceneControl 
-                    Margin="4"
-                    Background="{StaticResource ResourceKey=MainThemeLight1}"/>
 
-                <sequence:SequensorControl 
-                    Grid.Column="1"
-                    Margin="4"
+                <sequence:SceneControl 
+                    x:Name="scenes"
+                    Margin="0,0,2,0"
+                    Background="{StaticResource ResourceKey=MainThemeLight1}"
+                    />
+
+                <sequence:Sequensor 
+                    x:Name="sequensor"
+                    Grid.Column="1"                    
                     Background="{StaticResource ResourceKey=MainThemeLight1}"
                     />
 

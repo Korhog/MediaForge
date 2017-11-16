@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MForge.Sequensor.Sequence;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,12 @@ namespace EasyGIF
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            this.InitializeComponent();            
+
+            scenes.Controller.SceneChanged += (controller, scene) =>
+            {
+                sequensor.SetScene(scene);
+            };
         }
     }
 }

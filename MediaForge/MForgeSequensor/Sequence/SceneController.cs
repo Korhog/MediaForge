@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace MForge.Sequensor.Sequence
 {
+    public delegate void SceneChangedHandler(SceneController sender, Scene scene);    
+
     public class SceneController
     {
+        public event SceneChangedHandler SceneChanged;
+        private Scene currentScene;
+        public Scene CurrentScene {  get { return currentScene; } }
+
         private ObservableCollection<Scene> scenes;
         public ObservableCollection<Scene> Scenes { get { return scenes; } }
 
@@ -16,12 +22,20 @@ namespace MForge.Sequensor.Sequence
             scenes = new ObservableCollection<Scene>();
         }
 
-        public Scene CreateScene()
+        /// <summary> Создаем новую сцену </summary>
+        public Scene CreateScene(string name = null)
         {
             var scene = new Scene();
-            Scenes.Add(scene);
-
+            scenes.Add(scene);
+            SelectScene(scene);
             return scene;
+        }
+
+        /// <summary> Устанавливаем текущую сцену </summary>
+        public void SelectScene(Scene scene)
+        {
+            currentScene = scene;
+            SceneChanged?.Invoke(this, scene);
         }
     }
 }

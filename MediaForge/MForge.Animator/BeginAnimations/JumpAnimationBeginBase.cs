@@ -18,6 +18,7 @@ namespace MForge.Animator.BeginAnimations
 
         protected bool done = false;
         protected TimeSpan? duration = null;
+        protected TimeSpan? startTime = null;
 
         protected FrameworkElement target = null;
 
@@ -29,7 +30,7 @@ namespace MForge.Animator.BeginAnimations
 
         public TimeSpan? Duration { get { return duration; } }
 
-        public void ComputDuration()
+        public virtual void ComputDuration()
         {
             
         }
@@ -37,6 +38,8 @@ namespace MForge.Animator.BeginAnimations
         public void Reset()
         {
             timespan = null;
+            startTime = null;
+
             SetPosition();
             ComputDuration(); 
             done = false;
@@ -54,20 +57,26 @@ namespace MForge.Animator.BeginAnimations
             if (timespan == null)
             {
                 timespan = time;
+                startTime = time;
                 return;
             }
+
+            if (time < startTime)
+                return;
 
             var delta = Math.Abs(time.Ticks - timespan.Value.Ticks);           
 
             // Получаем масштаб времени
             var k = delta / (float)TimeSpan.TicksPerSecond;
-            Update(k, time.Ticks >= timespan.Value.Ticks);
             timespan = time;
+
+            Update(k, time.Ticks >= timespan.Value.Ticks);
+            
         }
 
         protected virtual void Update(float delta, bool forward)
         {
-
+            
         }
 
         protected virtual void SetPosition()

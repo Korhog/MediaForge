@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MForge.Sequensor.Sequence;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -13,30 +14,37 @@ using Windows.UI.Xaml.Media;
 
 namespace MForge.Sequensor.UIControls
 {
-    using Sequence;
-
-    // Элемент управления сценами
-    public sealed class SceneControl : ItemsControl
+    public sealed class SceneControl : Control
     {
-        private SceneController controller;
+        SceneController controller;
+        public SceneController Controller { get { return controller; } }
 
         public SceneControl()
         {
-            DefaultStyleKey = typeof(SceneControl);
-
-            // Внутренний контроллер
+            this.DefaultStyleKey = typeof(SceneControl);
             controller = new SceneController();
-
-            controller.CreateScene();
-            controller.CreateScene();
         }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            var list = GetTemplateChild("PART_Scenes") as ListView;
-            list.ItemsSource = controller.Scenes;
-            list.ItemClick += (sender, e) => { };
+
+            var items = GetTemplateChild("Scenes") as ListView;
+            items.ItemsSource = controller.Scenes;
+
+            items.SelectionChanged += (sender, e) =>
+            {
+                var list = sender as ListView;
+                var scene = list.SelectedItem as Scene;
+                controller.SelectScene(scene);
+            };
+
+            Button btn = GetTemplateChild("AddButton") as Button;
+            btn.Click += (sender, e) =>
+            {
+                if (controller == null) return;
+                controller.CreateScene();
+            };
         }
     }
 }

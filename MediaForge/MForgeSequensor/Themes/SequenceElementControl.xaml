@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MForge.Sequensor.UIControls">
+
+    <Style TargetType="local:SequenceElementControl" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:SequenceElementControl">
+                    <Border
+                        Name="Border"
+                        HorizontalAlignment="Left"
+                        ManipulationMode="TranslateX"                        
+                        Width="80"
+                        Height="40"
+                        Background="LightGreen"
+                        BorderBrush="DarkGreen"
+                        BorderThickness="8, 0, 8, 0">
+                        
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
