@@ -5,6 +5,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MForge.Sequensor/Themes/SequenceControl.xaml" />
+        <ResourceDictionary Source="/MForge.Sequensor/Themes/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="local:Sequensor">
@@ -25,7 +26,9 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="60"/>                                    
                                 </Grid.ColumnDefinitions>
-                                <Border Background="#2e5266"/>
+                                <Border Background="#2e5266">
+                                    <Button x:Name="AddButton" Content="add" Style="{StaticResource ResourceKey=addButton}"/>
+                                </Border>
                                 <Border 
                                     Grid.Column="1" 
                                     Grid.ColumnSpan="2" 

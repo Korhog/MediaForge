@@ -23,10 +23,6 @@ namespace MForge.Sequensor.Sequence
         public Scene()
         {
             sequensor = new SequenceController();
-
-            sequensor.Sequences.Add(new SequenceSingleBase(new SequenceElementBase()));
-            sequensor.Sequences.Add(new SequenceSingleBase(new SequenceElementBase()));
-            sequensor.Sequences.Add(new SequenceSingleBase(new SequenceElementBase()));
         }
 
         public ObservableCollection<ISequence> Sequences { get { return sequensor.Sequences; } }

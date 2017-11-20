@@ -38,6 +38,16 @@ namespace MForge.Sequensor.UIControls
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             };
+
+            Button btn = GetTemplateChild("AddButton") as Button;
+            btn.Click += (sender, e) =>
+            {
+                if (controller == null) return;
+                var seq = new SequenceBase();
+                seq.Items.Add(new SequenceElementBase());
+
+                controller.Sequences.Add(seq);
+            };
         }
 
         public void SetScene(Scene scene)
