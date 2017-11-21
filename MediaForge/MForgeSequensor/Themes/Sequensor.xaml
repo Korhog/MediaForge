@@ -6,6 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MForge.Sequensor/Themes/SequenceControl.xaml" />
         <ResourceDictionary Source="/MForge.Sequensor/Themes/Buttons.xaml" />
+        <ResourceDictionary Source="/MForge.Sequensor/Themes/Sliders.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="local:Sequensor">
@@ -32,7 +33,49 @@
                                 <Border 
                                     Grid.Column="1" 
                                     Grid.ColumnSpan="2" 
-                                    Background="#6e8898"/>                                
+                                    Background="#6e8898">
+                                    <Grid VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition />
+
+                                        </Grid.RowDefinitions>
+                                        
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <TextBlock 
+                                            Foreground="#1e4256"
+                                            Margin="4,4,0,0"  
+                                            Text="Длительность слайда"/>
+
+                                        <Slider 
+                                            Grid.Row="1"
+                                            Style="{StaticResource ResourceKey=RoundSlider}"
+                                            Value="50" 
+                                            Minimum="10" 
+                                            Maximum="100" 
+                                            Background="#6e8898"
+                                            BorderBrush="#2e5266"
+                                            
+                                            Margin="12, 9, 12, 4" 
+                                            x:Name="DurationSlider"/>
+                                        
+                                        <TextBlock 
+                                            VerticalAlignment="Center"
+                                            FontWeight="SemiBold"
+                                            Foreground="#1e4256"
+                                            FontSize="18"
+                                            Grid.Row="1"
+                                            Width="60"
+                                            Grid.Column="1" 
+                                            TextAlignment="Center"
+                                            Text="{Binding ElementName=DurationSlider, Path=Value, Mode=OneWay}"/>
+                                    </Grid>
+
+                                </Border>
                             </Grid>
                             
                             <Border Margin="0,2,0,0" Background="{TemplateBinding Background}" Grid.Row="1">

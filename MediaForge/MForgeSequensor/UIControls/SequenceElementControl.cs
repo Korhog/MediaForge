@@ -120,9 +120,13 @@ namespace MForge.Sequensor.UIControls
 
         void SetFrameSize(int frames)
         {
-            context.FramesDuration = frames; 
             frameSize = frames;
-            border.Width = frameSize * frameScale;
+            context.FramesDuration = frames;
+
+            var left = context.StartFrame * frameScale;
+            var right = (context.StartFrame + context.FramesDuration) * frameScale;
+
+            border.Width = right - left;
         }
     }
 }

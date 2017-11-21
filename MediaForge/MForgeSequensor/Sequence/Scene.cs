@@ -15,10 +15,9 @@ namespace MForge.Sequensor.Sequence
         private TimeSpan duration;
         /// <summary> Длительность сцены </summary>
         public TimeSpan Duration { get; }
-        
-        private int frameDuration = 100;
+
         /// <summary> Длительность сцены в кадрах </summary>
-        public int FrameDuration { get { return frameDuration; } }
+        public int FrameDuration { get; set; } = 50;
 
         public Scene()
         {

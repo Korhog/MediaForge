@@ -14,6 +14,7 @@ namespace MForge.Sequensor.UIControls
 {
     public sealed class SceneControl : Control
     {
+        ListView items;
         SceneController controller;
         public SceneController Controller { get { return controller; } }
 
@@ -27,7 +28,7 @@ namespace MForge.Sequensor.UIControls
         {
             base.OnApplyTemplate();
 
-            var items = GetTemplateChild("Scenes") as ListView;
+            items = GetTemplateChild("Scenes") as ListView;
             items.ItemsSource = controller.Scenes;
 
             items.SelectionChanged += (sender, e) =>
@@ -40,8 +41,11 @@ namespace MForge.Sequensor.UIControls
             Button btn = GetTemplateChild("AddButton") as Button;
             btn.Click += (sender, e) =>
             {
-                if (controller == null) return;
-                controller.CreateScene();
+                if (controller == null)
+                    return;
+
+                var scene = controller.CreateScene();
+                items.SelectedItem = items.Items.LastOrDefault();
             };
         }
     }

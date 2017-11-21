@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
@@ -16,7 +17,11 @@ namespace MForge.Sequensor.UIControls
 {
     public sealed class Sequensor : Control
     {
+
+        Scene currentScene = null;
         SequenceController controller;
+
+        Slider slider;
         ItemsControl items;
         public SequenceController Controller { get { return controller; } }
 
@@ -31,10 +36,10 @@ namespace MForge.Sequensor.UIControls
             items = GetTemplateChild("Sequences") as ItemsControl;
             items.SizeChanged += (sender, e) =>
             {
-                if (controller == null)
+                if (controller == null || currentScene == null)
                     return;
 
-                var frameScale = e.NewSize.Width / 100;
+                var frameScale = e.NewSize.Width / currentScene.FrameDuration;
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             };
@@ -42,18 +47,30 @@ namespace MForge.Sequensor.UIControls
             Button btn = GetTemplateChild("AddButton") as Button;
             btn.Click += (sender, e) =>
             {
-                if (controller == null) return;
+                if (controller == null || currentScene == null)
+                    return;
+
                 var seq = new SequenceBase();
                 seq.Items.Add(new SequenceElementBase());
 
-                controller.Sequences.Add(seq);
+                var frameScale = items.ActualWidth / currentScene.FrameDuration;
+                seq.UpdateScale(frameScale);
+
+                controller.Sequences.Add(seq);                
             };
+
+            // Получаем слайдер 
+            slider = GetTemplateChild("DurationSlider") as Slider;
+            slider.ValueChanged += SceneDurationChange;
         }
 
         public void SetScene(Scene scene)
         {
+            currentScene = scene;
             if (scene == null)
                 return;
+
+            slider.Value = scene.FrameDuration;
 
             controller = scene.Sequensor;
             if (items != null)
@@ -64,6 +81,19 @@ namespace MForge.Sequensor.UIControls
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             }
+        }
+
+        void SceneDurationChange(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (currentScene == null || e.OldValue == (int)e.NewValue)
+                return;
+
+            currentScene.FrameDuration = (int)e.NewValue;
+
+            var frameScale = items.ActualWidth / currentScene.FrameDuration;
+
+            foreach (var sequence in controller.Sequences)
+                sequence.UpdateScale(frameScale);
         }
     }    
 }
