@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MForge.Sequensor.Themes">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
 
     <Style TargetType="Thumb" x:Key="RoundThumb" >
         <Setter Property="Template">

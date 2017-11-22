@@ -45,19 +45,31 @@ namespace MForge.Sequensor.UIControls
             };
 
             Button btn = GetTemplateChild("AddButton") as Button;
-            btn.Click += (sender, e) =>
+            MenuFlyout menu = btn.Flyout as MenuFlyout;
+
+            foreach (var item in menu.Items)
             {
-                if (controller == null || currentScene == null)
-                    return;
+                item.Tapped += (sender, e) =>
+                {
+                    if ((sender as MenuFlyoutItem)?.Text == "Shape")
+                    {
+                        return;
+                    }
 
-                var seq = new SequenceBase();
-                seq.Items.Add(new SequenceElementBase());
+                    if (controller == null || currentScene == null)
+                        return;
 
-                var frameScale = items.ActualWidth / currentScene.FrameDuration;
-                seq.UpdateScale(frameScale);
+                    var seq = new SequenceBase();
+                    seq.Items.Add(new SequenceElementBase());
 
-                controller.Sequences.Add(seq);                
-            };
+                    var frameScale = items.ActualWidth / currentScene.FrameDuration;
+                    seq.UpdateScale(frameScale);
+
+                    controller.Sequences.Add(seq);
+                };
+
+            }           
+
 
             // Получаем слайдер 
             slider = GetTemplateChild("DurationSlider") as Slider;
@@ -85,7 +97,7 @@ namespace MForge.Sequensor.UIControls
 
         void SceneDurationChange(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (currentScene == null || e.OldValue == (int)e.NewValue)
+            if ( controller == null || currentScene == null || e.OldValue == (int)e.NewValue )
                 return;
 
             currentScene.FrameDuration = (int)e.NewValue;

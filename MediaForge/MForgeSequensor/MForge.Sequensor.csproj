@@ -116,6 +116,7 @@
     <Compile Include="Sequence\SceneController.cs" />
     <Compile Include="Sequence\SequenceElementBase.cs" />
     <Compile Include="Sequence\SequenceSingleBase.cs" />
+    <Compile Include="UIControls\Diag.cs" />
     <Compile Include="UIControls\SceneControl.cs" />
     <Compile Include="UIControls\SequenceControl.cs" />
     <Compile Include="UIControls\SequenceElementControl.cs" />
@@ -129,6 +130,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\Diag.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -163,7 +169,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

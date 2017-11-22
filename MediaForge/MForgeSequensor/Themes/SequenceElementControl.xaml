@@ -12,10 +12,10 @@
                         HorizontalAlignment="Left"
                         ManipulationMode="TranslateX"                        
                         Width="80"
-                        Height="40"
-                        Background="LightGreen"
-                        BorderBrush="DarkGreen"
-                        BorderThickness="8, 0, 8, 0">
+                        Height="35"
+                        Background="Gold"
+                        BorderBrush="Goldenrod"
+                        BorderThickness="4, 0, 4, 0">
                         
                     </Border>
                 </ControlTemplate>

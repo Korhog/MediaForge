@@ -3,8 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MForge.Sequensor.UIControls" >
 
-    <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary.MergedDictionaries>        
         <ResourceDictionary Source="/MForge.Sequensor/Themes/Sequensor.xaml" />
-        <ResourceDictionary Source="/MForge.Sequensor/Themes/SceneControl.xaml" />        
+        <ResourceDictionary Source="/MForge.Sequensor/Themes/SceneControl.xaml" />
+        <ResourceDictionary Source="/MForge.Sequensor/Themes/Diag.xaml" />        
     </ResourceDictionary.MergedDictionaries>
+    
 </ResourceDictionary>

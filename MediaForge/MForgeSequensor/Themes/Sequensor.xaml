@@ -28,7 +28,15 @@
                                     <ColumnDefinition Width="60"/>                                    
                                 </Grid.ColumnDefinitions>
                                 <Border Background="#2e5266">
-                                    <Button x:Name="AddButton" Content="add" Style="{StaticResource ResourceKey=addButton}"/>
+                                    <Button x:Name="AddButton" Content="add" Style="{StaticResource ResourceKey=addButton}">
+                                        <Button.Flyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Image"/>
+                                                <MenuFlyoutItem Text="Text"/>
+                                                <MenuFlyoutItem Text="Shape"/>
+                                            </MenuFlyout>                                            
+                                        </Button.Flyout>
+                                    </Button>
                                 </Border>
                                 <Border 
                                     Grid.Column="1" 
@@ -79,7 +87,9 @@
                             </Grid>
                             
                             <Border Margin="0,2,0,0" Background="{TemplateBinding Background}" Grid.Row="1">
-                                <ItemsControl Grid.Row="1" Name="Sequences">
+                                <ItemsControl 
+                                    Grid.Row="1" 
+                                    Name="Sequences" >
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <local:SequenceControl />
