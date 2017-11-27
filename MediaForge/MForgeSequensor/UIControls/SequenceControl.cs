@@ -20,13 +20,5 @@ namespace MForge.Sequensor.UIControls
         {
             this.DefaultStyleKey = typeof(SequenceControl);
         }
-
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            var sequence = DataContext as ISequence;
-            var items = GetTemplateChild("Items") as ItemsControl;
-            items.ItemsSource = sequence?.Items;
-        }
     }
 }

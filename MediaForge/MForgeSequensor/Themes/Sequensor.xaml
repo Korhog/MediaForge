@@ -87,15 +87,40 @@
                             </Grid>
                             
                             <Border Margin="0,2,0,0" Background="{TemplateBinding Background}" Grid.Row="1">
-                                <ItemsControl 
+                                <ListView 
+                                    SelectionMode="Single" 
+                                    CanReorderItems="True"
+                                    ReorderMode="Enabled" 
+                                    AllowDrop="True"
+                                    CanDragItems="False" 
+                                    
                                     Grid.Row="1" 
                                     Name="Sequences" >
-                                    <ItemsControl.ItemTemplate>
+
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListViewItem">
+                                                        <ListViewItemPresenter
+                                                            SelectedBackground="#993955"
+                                                            SelectedPointerOverBackground="#993955"
+                                                            Margin="0"
+                                                            Padding="8, 0, 0, 0"
+                                                            
+                                                            />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+
+                                    <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <local:SequenceControl />
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </Border>
                         </Grid>
                     </Border>

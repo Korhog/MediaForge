@@ -128,5 +128,11 @@ namespace MForge.Sequensor.UIControls
 
             border.Width = right - left;
         }
+
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        {            
+            base.OnPointerPressed(e);
+            e.Handled = true;
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace MForge.Sequensor.UIControls
         SequenceController controller;
 
         Slider slider;
-        ItemsControl items;
+        ListView items;
         public SequenceController Controller { get { return controller; } }
 
         public Sequensor()
@@ -33,7 +33,7 @@ namespace MForge.Sequensor.UIControls
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            items = GetTemplateChild("Sequences") as ItemsControl;
+            items = GetTemplateChild("Sequences") as ListView;
             items.SizeChanged += (sender, e) =>
             {
                 if (controller == null || currentScene == null)
