@@ -7,17 +7,24 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SequenceElementControl">
-                    <Border
-                        Name="Border"
-                        HorizontalAlignment="Left"
-                        ManipulationMode="TranslateX"                        
-                        Width="80"
-                        Height="35"
-                        Background="Gold"
-                        BorderBrush="Goldenrod"
-                        BorderThickness="4, 0, 4, 0">
+                    <StackPanel 
+                            ManipulationMode="TranslateX"
+                            Orientation="Horizontal">
                         
-                    </Border>
+                        <Border Background="Red" Height="35" Width="20" Name="PART_LEFT_BTN"/>
+                        <Border
+                                Name="Border"
+                                HorizontalAlignment="Left"
+                                ManipulationMode="TranslateX"                        
+                                Width="80"
+                                Height="35"
+                                Background="Gold"
+                                BorderBrush="Goldenrod"
+                                BorderThickness="4, 0, 4, 0"/>
+                        <Border Background="Red" Height="35" Width="20" Name="PART_RIGHT_BTN"/>
+                    </StackPanel>
+
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

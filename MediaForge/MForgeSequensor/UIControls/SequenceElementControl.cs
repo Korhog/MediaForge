@@ -45,6 +45,15 @@ namespace MForge.Sequensor.UIControls
         {
             base.OnApplyTemplate();
             border = GetTemplateChild("Border") as Border;
+
+            (GetTemplateChild("PART_LEFT_BTN") as Border).PointerPressed += (sender, e) => {
+                mode = UIControls.ManipulationMode.ScaleLeft;
+            };
+
+            (GetTemplateChild("PART_RIGHT_BTN") as Border).PointerPressed += (sender, e) => {
+                mode = UIControls.ManipulationMode.ScaleRight;
+            };
+
             context = DataContext as ISequenceElement;
             context.OnScale += (scale) =>
             {
@@ -59,6 +68,12 @@ namespace MForge.Sequensor.UIControls
 
             SetBeginFrame(frame);
             SetFrameSize(frameSize);
+        }
+
+        protected override void OnManipulationCompleted(ManipulationCompletedRoutedEventArgs e)
+        {
+            base.OnManipulationCompleted(e);
+            mode = UIControls.ManipulationMode.Move;
         }
 
         protected override void OnManipulationStarting(ManipulationStartingRoutedEventArgs e)
@@ -76,9 +91,6 @@ namespace MForge.Sequensor.UIControls
                 beginFrame = frame;
                 beginFrameSize = frameSize;
                 currentX = beginX.Value;
-
-                mode = e.Position.X < 8 ? UIControls.ManipulationMode.ScaleLeft : UIControls.ManipulationMode.Move;
-
                 return;
             }
 
@@ -87,18 +99,21 @@ namespace MForge.Sequensor.UIControls
             var x = currentX - beginX.Value;
             var framesDelta = (int)(x / frameScale);
 
-            if (beginFrame + framesDelta < 0)
-            {
-                framesDelta = -beginFrame;
-            }
-
             switch (mode)
             {
                 case UIControls.ManipulationMode.Move:
+                    if (beginFrame + framesDelta < 0)
+                    {
+                        framesDelta = -beginFrame;
+                    }
                     SetBeginFrame(beginFrame + framesDelta);
                     break;
 
                 case UIControls.ManipulationMode.ScaleLeft:
+                    if (beginFrame + framesDelta < 0)
+                    {
+                        framesDelta = -beginFrame;
+                    }
                     SetBeginFrame(beginFrame + framesDelta);
                     SetFrameSize(beginFrameSize - framesDelta);
                     break;
@@ -106,8 +121,7 @@ namespace MForge.Sequensor.UIControls
                 case UIControls.ManipulationMode.ScaleRight:
                     SetFrameSize(beginFrameSize + framesDelta);
                     break;
-            }
-                   
+            }                   
         }
 
         void SetBeginFrame(int newFrame)
@@ -115,7 +129,7 @@ namespace MForge.Sequensor.UIControls
             context.StartFrame = newFrame;
             frame = newFrame;
             var left = frame * frameScale;
-            border.Margin = new Thickness(left, 0, 0, 0);
+            Margin = new Thickness(left, 0, 0, 0);
         }
 
         void SetFrameSize(int frames)
