@@ -39,7 +39,8 @@ namespace MForge.Sequensor.UIControls
                 if (controller == null || currentScene == null)
                     return;
 
-                var frameScale = e.NewSize.Width / currentScene.FrameDuration;
+#warning убрать хардкод
+                var frameScale = (e.NewSize.Width - 40) / currentScene.FrameDuration;
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             };
@@ -60,9 +61,9 @@ namespace MForge.Sequensor.UIControls
                         return;
 
                     var seq = new SequenceBase();
-                    seq.Items.Add(new SequenceElementBase());
+                    seq.Items.Add(new SequenceElementBase(currentScene));
 
-                    var frameScale = items.ActualWidth / currentScene.FrameDuration;
+                    var frameScale = (items.ActualWidth - 40) / currentScene.FrameDuration;
                     seq.UpdateScale(frameScale);
 
                     controller.Sequences.Add(seq);
@@ -88,8 +89,8 @@ namespace MForge.Sequensor.UIControls
             if (items != null)
             {
                 items.ItemsSource = controller.Sequences;
-
-                var frameScale = items.ActualWidth / scene.FrameDuration;
+#warning убрать хардкод
+                var frameScale = (items.ActualWidth - 40) / scene.FrameDuration;
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             }
@@ -101,8 +102,8 @@ namespace MForge.Sequensor.UIControls
                 return;
 
             currentScene.FrameDuration = (int)e.NewValue;
-
-            var frameScale = items.ActualWidth / currentScene.FrameDuration;
+#warning убрать хардкод
+            var frameScale = (items.ActualWidth - 40) / currentScene.FrameDuration;
 
             foreach (var sequence in controller.Sequences)
                 sequence.UpdateScale(frameScale);

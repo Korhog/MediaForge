@@ -16,9 +16,27 @@ namespace MForge.Sequensor.UIControls
 {
     public sealed class SequenceControl : Control
     {
+        Border border;
+
         public SequenceControl()
         {
             this.DefaultStyleKey = typeof(SequenceControl);
         }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            border = GetTemplateChild("PART_Border") as Border;
+            var context = DataContext as ISequence;
+            if (context != null)
+            {
+                context.OnScale += (scale) =>
+                {
+                    
+                };                
+            }
+        }
+
+
     }
 }

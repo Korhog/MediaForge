@@ -99,16 +99,15 @@
 
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
+                                            <Setter Property="Margin" Value="0, 0, 0, 2"/>
+                                            <Setter Property="MinWidth" Value="1"/>
+                                            <Setter Property="MinHeight" Value="35"/>
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="ListViewItem">
-                                                        <ListViewItemPresenter
-                                                            SelectedBackground="#993955"
-                                                            SelectedPointerOverBackground="#993955"
-                                                            Margin="0"
-                                                            Padding="8, 0, 0, 0"
-                                                            
-                                                            />
+                                                        <Border Padding="0, 0, 0, 0" >
+                                                            <ContentPresenter/>
+                                                        </Border>
                                                     </ControlTemplate>
                                                 </Setter.Value>
                                             </Setter>
@@ -117,7 +116,7 @@
 
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <local:SequenceControl />
+                                             <local:SequenceControl/>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>

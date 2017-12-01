@@ -24,7 +24,7 @@ namespace MForge.Sequensor.UIControls
     public sealed class SequenceElementControl : Control
     {
         ManipulationMode mode = UIControls.ManipulationMode.Move;
-        ISequenceElement context;
+        ISequenceElement context;        
 
         double frameScale = 5;
         double? beginX;
@@ -98,7 +98,7 @@ namespace MForge.Sequensor.UIControls
 
             var x = currentX - beginX.Value;
             var framesDelta = (int)(x / frameScale);
-
+            var rightEdge = 0;
             switch (mode)
             {
                 case UIControls.ManipulationMode.Move:
@@ -106,6 +106,13 @@ namespace MForge.Sequensor.UIControls
                     {
                         framesDelta = -beginFrame;
                     }
+
+                    rightEdge = beginFrame + frameSize + framesDelta;
+                    if (rightEdge > context.Scene.FrameDuration )
+                    {
+                        framesDelta -= (rightEdge - context.Scene.FrameDuration);
+                    }
+                    
                     SetBeginFrame(beginFrame + framesDelta);
                     break;
 
@@ -114,11 +121,18 @@ namespace MForge.Sequensor.UIControls
                     {
                         framesDelta = -beginFrame;
                     }
+
                     SetBeginFrame(beginFrame + framesDelta);
                     SetFrameSize(beginFrameSize - framesDelta);
                     break;
 
                 case UIControls.ManipulationMode.ScaleRight:
+                    rightEdge = beginFrame + beginFrameSize + framesDelta;
+                    if (rightEdge > context.Scene.FrameDuration)
+                    {
+                        framesDelta -= (rightEdge - context.Scene.FrameDuration);
+                    }
+
                     SetFrameSize(beginFrameSize + framesDelta);
                     break;
             }                   
@@ -134,6 +148,9 @@ namespace MForge.Sequensor.UIControls
 
         void SetFrameSize(int frames)
         {
+            if (frames < 1)
+                return;
+
             frameSize = frames;
             context.FramesDuration = frames;
 

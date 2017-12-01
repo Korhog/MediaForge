@@ -8,6 +8,8 @@ namespace MForge.Sequensor.Sequence
 {
     public interface ISequence
     {
+        event UpdateScaleEvent OnScale;
+
         /// <summary>
         /// Обновление элементов последовательности
         /// </summary>

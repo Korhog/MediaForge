@@ -28,7 +28,8 @@ namespace MForge.Sequensor.Sequence
         public void UpdateScale(double frameScale)
         {
             foreach (var item in Items)
-                item.UpdateScale(frameScale);            
+                item.UpdateScale(frameScale);
+            OnScale?.Invoke(frameScale);
         }
     }
 }

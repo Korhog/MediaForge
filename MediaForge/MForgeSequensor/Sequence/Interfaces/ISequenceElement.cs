@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MForge.Sequensor.Sequence.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,9 @@ namespace MForge.Sequensor.Sequence
     /// <summary> Элемент последовательности </summary>
     public interface ISequenceElement
     {
+        /// <summary> Родительнская сцена </summary>
+        IScene Scene { get; }
+
         /// <summary> Длительность элемента в кадрах </summary>
         int FramesDuration { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MForge.Sequensor.Sequence.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MForge.Sequensor.Sequence
 {
-    public class Scene
+    public class Scene : IScene
     {
         private SequenceController sequensor;
         public SequenceController Sequensor { get { return sequensor; } }
