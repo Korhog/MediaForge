@@ -1,4 +1,5 @@
 ﻿using MForge.Sequensor.Sequence;
+using MForge.Sequensor.Sequence.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace MForge.Sequensor.UIControls
     public sealed class Sequensor : Control
     {
 
-        Scene currentScene = null;
+        IScene currentScene = null;
         SequenceController controller;
 
         Slider slider;
@@ -43,6 +44,13 @@ namespace MForge.Sequensor.UIControls
                 var frameScale = (e.NewSize.Width - 40) / currentScene.FrameDuration;
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
+            };
+            
+            items.DragItemsStarting += (sender, e) =>
+            {
+                var item = e.Items.FirstOrDefault() as ISequence;
+                if (item != null)
+                    e.Data.Properties.Add("Context", item);
             };
 
             Button btn = GetTemplateChild("AddButton") as Button;
@@ -77,7 +85,7 @@ namespace MForge.Sequensor.UIControls
             slider.ValueChanged += SceneDurationChange;
         }
 
-        public void SetScene(Scene scene)
+        public void SetScene(IScene scene)
         {
             currentScene = scene;
             if (scene == null)
@@ -94,6 +102,11 @@ namespace MForge.Sequensor.UIControls
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             }
+        }
+
+        public void DeleteSequence(ISequence sequence)
+        {
+            currentScene.Sequences.Remove(sequence);
         }
 
         void SceneDurationChange(object sender, RangeBaseValueChangedEventArgs e)

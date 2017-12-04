@@ -1,4 +1,5 @@
 ﻿using MForge.Sequensor.Sequence;
+using MForge.Sequensor.Sequence.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,16 @@ namespace MForge.Sequensor.UIControls
             controller = new SceneController();
         }
 
+        public void DeleteScene(IScene scene)
+        {
+            if (items.SelectedItem as Scene == scene)
+            {
+                var newScene = controller.Scenes.Where(s => s != scene).FirstOrDefault();
+                items.SelectedItem = newScene;
+            }            
+            controller.Scenes.Remove(scene);
+        }
+
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -36,6 +47,13 @@ namespace MForge.Sequensor.UIControls
                 var list = sender as ListView;
                 var scene = list.SelectedItem as Scene;
                 controller.SelectScene(scene);
+            };
+
+            items.DragItemsStarting += (sender, e) =>
+            {
+                var item = e.Items.FirstOrDefault() as IScene;
+                if (item != null)
+                    e.Data.Properties.Add("Context", item);
             };
 
             Button btn = GetTemplateChild("AddButton") as Button;

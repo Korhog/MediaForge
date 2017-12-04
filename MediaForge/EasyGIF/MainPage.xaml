@@ -21,13 +21,26 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
         <Border x:Name="PreviewBorder" 
                 CornerRadius="3"
                 Background="{StaticResource ResourceKey=MainThemeLight1}"
                 Margin="20"
                 Width="400" 
                 Height="250"/>
+
+        <Border Width="60" 
+                Height="60"
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Left" 
+                Background="DarkRed"
+                CornerRadius="4" 
+                AllowDrop="True"
+                DragOver="DeleteDropOver"
+                Drop="Drop"
+                Margin="20">
+            <FontIcon Glyph="&#xE107;"/>
+        </Border>
 
         <Border Background="{StaticResource ResourceKey=MainThemeDark1}" 
                 Grid.Row="1" 

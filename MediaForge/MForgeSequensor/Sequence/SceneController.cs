@@ -1,25 +1,22 @@
-﻿using System;
+﻿using MForge.Sequensor.Sequence.Interfaces;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MForge.Sequensor.Sequence
 {
-    public delegate void SceneChangedHandler(SceneController sender, Scene scene);    
+    public delegate void SceneChangedHandler(SceneController sender, IScene scene);    
 
     public class SceneController
     {
         public event SceneChangedHandler SceneChanged;
-        private Scene currentScene;
-        public Scene CurrentScene {  get { return currentScene; } }
+        private IScene currentScene;
+        public IScene CurrentScene {  get { return currentScene; } }
 
-        private ObservableCollection<Scene> scenes;
-        public ObservableCollection<Scene> Scenes { get { return scenes; } }
+        private ObservableCollection<IScene> scenes;
+        public ObservableCollection<IScene> Scenes { get { return scenes; } }
 
         public SceneController()
         {
-            scenes = new ObservableCollection<Scene>();
+            scenes = new ObservableCollection<IScene>();
         }
 
         /// <summary> Создаем новую сцену </summary>
@@ -32,7 +29,7 @@ namespace MForge.Sequensor.Sequence
         }
 
         /// <summary> Устанавливаем текущую сцену </summary>
-        public void SelectScene(Scene scene)
+        public void SelectScene(IScene scene)
         {
             currentScene = scene;
             SceneChanged?.Invoke(this, scene);

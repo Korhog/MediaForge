@@ -92,7 +92,7 @@
                                     CanReorderItems="True"
                                     ReorderMode="Enabled" 
                                     AllowDrop="True"
-                                    CanDragItems="False" 
+                                    CanDragItems="True" 
                                     
                                     Grid.Row="1" 
                                     Name="Sequences" >

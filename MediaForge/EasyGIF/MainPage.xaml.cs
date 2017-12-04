@@ -1,4 +1,5 @@
 ﻿using MForge.Sequensor.Sequence;
+using MForge.Sequensor.Sequence.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +32,35 @@ namespace EasyGIF
             {
                 sequensor.SetScene(scene);
             };
+        }
+
+        private void DeleteDropOver(object sender, DragEventArgs e)
+        {
+            var context = e.Data.Properties["Context"];
+            if (context is ISequence)
+            {
+                e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+            }
+            else if (context is IScene)
+            {
+                if (scenes.Controller.Scenes.Count > 1)
+                {
+                    e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+                }
+            }
+        }
+
+        private void Drop(object sender, DragEventArgs e)
+        {
+            var context = e.Data.Properties["Context"];
+            if (context is ISequence)
+            {
+                sequensor.DeleteSequence(context as ISequence);
+            }
+            else if (context is IScene)
+            {
+                scenes.DeleteScene(context as IScene);
+            }                
         }
     }
 }

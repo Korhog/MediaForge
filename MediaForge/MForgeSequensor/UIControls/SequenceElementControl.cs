@@ -102,25 +102,22 @@ namespace MForge.Sequensor.UIControls
             switch (mode)
             {
                 case UIControls.ManipulationMode.Move:
-                    if (beginFrame + framesDelta < 0)
-                    {
-                        framesDelta = -beginFrame;
-                    }
+                    if (beginFrame + framesDelta < 0)                    
+                        framesDelta = -beginFrame;                    
 
                     rightEdge = beginFrame + frameSize + framesDelta;
-                    if (rightEdge > context.Scene.FrameDuration )
-                    {
-                        framesDelta -= (rightEdge - context.Scene.FrameDuration);
-                    }
+                    if (rightEdge > context.Scene.FrameDuration )                    
+                        framesDelta -= (rightEdge - context.Scene.FrameDuration);                    
                     
                     SetBeginFrame(beginFrame + framesDelta);
                     break;
 
                 case UIControls.ManipulationMode.ScaleLeft:
-                    if (beginFrame + framesDelta < 0)
-                    {
-                        framesDelta = -beginFrame;
-                    }
+                    if (beginFrame + framesDelta < 0)                    
+                        framesDelta = -beginFrame;                    
+
+                    if (beginFrameSize - framesDelta < 1)                   
+                        framesDelta = beginFrameSize - 1;                    
 
                     SetBeginFrame(beginFrame + framesDelta);
                     SetFrameSize(beginFrameSize - framesDelta);
@@ -128,11 +125,9 @@ namespace MForge.Sequensor.UIControls
 
                 case UIControls.ManipulationMode.ScaleRight:
                     rightEdge = beginFrame + beginFrameSize + framesDelta;
-                    if (rightEdge > context.Scene.FrameDuration)
-                    {
+                    if (rightEdge > context.Scene.FrameDuration)                    
                         framesDelta -= (rightEdge - context.Scene.FrameDuration);
-                    }
-
+                    
                     SetFrameSize(beginFrameSize + framesDelta);
                     break;
             }                   
