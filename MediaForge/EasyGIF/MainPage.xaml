@@ -5,47 +5,118 @@
     xmlns:local="using:EasyGIF"
     xmlns:sequence="using:MForge.Sequensor.UIControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"    
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme\ThemeBrushes.xaml"/>
+                <ResourceDictionary Source="/MForge.Sequensor/Themes/Sliders.xaml" />
+                <ResourceDictionary Source="/MForge.Sequensor/Themes/Buttons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
 
 
-    <Grid Background="{StaticResource ResourceKey=MainThemeBackground}">       
+    <Grid Background="{StaticResource ResourceKey=MainThemeBackground}">
+    <Grid Margin="0, 32, 0, 0" Padding="0,1,0,0"  Background="#1d1d1d">       
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*" MinHeight="150" MaxHeight="300"/> 
         </Grid.RowDefinitions>
+        
+        <Grid Background="#1d1d1d">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MaxWidth="300"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
 
-        <Border x:Name="PreviewBorder" 
-                CornerRadius="3"
-                Background="{StaticResource ResourceKey=MainThemeLight1}"
-                Margin="20"
-                Width="400" 
-                Height="250"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
 
-        <Border Width="60" 
-                Height="60"
-                VerticalAlignment="Top" 
-                HorizontalAlignment="Left" 
-                Background="DarkRed"
-                CornerRadius="4" 
-                AllowDrop="True"
-                DragOver="DeleteDropOver"
-                Drop="Drop"
-                Margin="20">
-            <FontIcon Glyph="&#xE107;"/>
-        </Border>
+                    <Border Background="{StaticResource ResourceKey=MainThemeLight1}"                     
+                            Margin="0,0,1,0">
+                        <Button x:Name="AddButton" Content="add" Style="{StaticResource ResourceKey=addButton}">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Image" Click="OnCreateImage"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Border>
+                    
+                    <Border Grid.Column="1"
+                            Background="{StaticResource ResourceKey=MainThemeLight1}"                     
+                            Margin="0,0,1,0"/>
+
+                    <Border Grid.Column="2"
+                            Margin="0,0,1,0"
+                            Background="DarkRed"
+                            AllowDrop="True"
+                            DragOver="DeleteDropOver"
+                            Drop="Drop">
+                        <FontIcon Glyph="&#xE107;" FontSize="24"/>
+                    </Border>
+
+                    <Border Grid.ColumnSpan="3"
+                            Grid.Row="1"
+                            Background="{StaticResource ResourceKey=MainThemeLight1}"                     
+                            Margin="0,1,1,0">
+                        <GridView Margin="10" x:Name="Library" CanDragItems="True">
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border 
+                                        Background="#1d1d1d"                                                                               
+                                        Width="120" 
+                                        Height="90"/>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>                          
+                        </GridView>
+                    </Border>
+                </Grid>
+
+
+                <Border x:Name="PreviewBorder" 
+                    Grid.Column="1"
+                    Background="{StaticResource ResourceKey=MainThemeBackground}"
+                    >
+                    <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                        <ScrollViewer>
+                            <Border Margin="20" Background="White" Width="800" Height="600"/>
+                        </ScrollViewer>
+                        <Border
+                            BorderBrush="#1d1d1d"
+                            BorderThickness="0,1,0,0"
+                            Grid.Row="1" 
+                            Background="{StaticResource ResourceKey=MainThemeLight1}">
+                            <Slider Style="{StaticResource ResourceKey=RoundSlider}" 
+                                    x:Name="TimeSlider"
+                                    Margin="10"                        
+                                    BorderBrush="{StaticResource ResourceKey=MainThemeDark1}"
+                                    BorderThickness="0"
+                                    />
+                        </Border>                        
+                    </Grid>           
+            </Border>
+        </Grid>
 
         <Border Background="{StaticResource ResourceKey=MainThemeDark1}" 
                 Grid.Row="1" 
                 Grid.ColumnSpan="2"
-                Padding="4">
+                Margin="0,1,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -54,7 +125,7 @@
 
                 <sequence:SceneControl 
                     x:Name="scenes"
-                    Margin="0,0,2,0"
+                    Margin="0,0,1,0"
                     Background="{StaticResource ResourceKey=MainThemeLight1}"
                     />
 
@@ -66,7 +137,6 @@
 
             </Grid>
         </Border>
-
-
+        </Grid>
     </Grid>
 </Page>

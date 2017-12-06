@@ -29,14 +29,15 @@
                                     <ColumnDefinition Width="120"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Border Background="#993955">
+                                <Border Background="#993955" Margin="0,0,1,0">
                                     <Button x:Name="AddButton" Content="add" Style="{StaticResource ResourceKey=addButton}"/>
                                 </Border>
                                 <Border Grid.Column="1" Background="#ae76a6"/>
                             </Grid>
 
-                            <Border Margin="0,2,0,0" Background="{TemplateBinding Background}" Grid.Row="1">
+                            <Border Margin="0,1,0,0" Background="{TemplateBinding Background}" Grid.Row="1">
                                 <ListView x:Name="Scenes"
+                                    Padding="0,0,0,4"
                                     SelectionMode="Single" 
                                     CanReorderItems="True"
                                     ReorderMode="Enabled" 

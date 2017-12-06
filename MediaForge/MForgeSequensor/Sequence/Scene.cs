@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace MForge.Sequensor.Sequence
 {
+    
+
     public class Scene : IScene
-    {
+    {      
+
         private SequenceController sequensor;
         public SequenceController Sequensor { get { return sequensor; } }
 
@@ -18,7 +21,12 @@ namespace MForge.Sequensor.Sequence
         public TimeSpan Duration { get; }
 
         /// <summary> Длительность сцены в кадрах </summary>
-        public int FrameDuration { get; set; } = 50;
+        int frameDuration = 50;
+        public int FrameDuration
+        {
+            get { return frameDuration; }
+            set { frameDuration = value;  }
+        }
 
         public Scene()
         {

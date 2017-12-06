@@ -1,7 +1,9 @@
-﻿using MForge.Sequensor.Sequence;
+﻿using MForge.Render2D.Interfaces;
+using MForge.Sequensor.Sequence;
 using MForge.Sequensor.Sequence.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,9 +26,21 @@ namespace EasyGIF
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        MediaLibrary lib;
+
+
         public MainPage()
         {
-            this.InitializeComponent();            
+            this.InitializeComponent();
+
+            lib = new MediaLibrary();
+            Library.ItemsSource = lib.Items;
+
+
+            sequensor.DurationChanged += (scene) =>
+            {
+                TimeSlider.Maximum = scenes.Controller.Scenes.Sum(s => s.FrameDuration);
+            };
 
             scenes.Controller.SceneChanged += (controller, scene) =>
             {
@@ -48,6 +62,9 @@ namespace EasyGIF
                     e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
                 }
             }
+
+            e.DragUIOverride.IsGlyphVisible = false;
+            e.DragUIOverride.Caption = "Удалить";
         }
 
         private void Drop(object sender, DragEventArgs e)
@@ -61,6 +78,11 @@ namespace EasyGIF
             {
                 scenes.DeleteScene(context as IScene);
             }                
+        }
+
+        private void OnCreateImage(object sender, RoutedEventArgs e)
+        {
+            lib.CreateImage();
         }
     }
 }

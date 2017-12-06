@@ -24,7 +24,9 @@ namespace MForge.Sequensor.UIControls
     public sealed class SequenceElementControl : Control
     {
         ManipulationMode mode = UIControls.ManipulationMode.Move;
-        ISequenceElement context;        
+        ISequenceElement context;
+
+        int minFrameSize = 5;
 
         double frameScale = 5;
         double? beginX;
@@ -116,8 +118,8 @@ namespace MForge.Sequensor.UIControls
                     if (beginFrame + framesDelta < 0)                    
                         framesDelta = -beginFrame;                    
 
-                    if (beginFrameSize - framesDelta < 1)                   
-                        framesDelta = beginFrameSize - 1;                    
+                    if (beginFrameSize - framesDelta < minFrameSize)                   
+                        framesDelta = beginFrameSize - minFrameSize;                    
 
                     SetBeginFrame(beginFrame + framesDelta);
                     SetFrameSize(beginFrameSize - framesDelta);
@@ -143,7 +145,7 @@ namespace MForge.Sequensor.UIControls
 
         void SetFrameSize(int frames)
         {
-            if (frames < 1)
+            if (frames < minFrameSize)
                 return;
 
             frameSize = frames;

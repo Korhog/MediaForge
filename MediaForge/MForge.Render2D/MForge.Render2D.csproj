@@ -108,6 +108,8 @@
   <ItemGroup>
     <Compile Include="Engine2D.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
+    <Compile Include="Interfaces\IRenderSource.cs" />
+    <Compile Include="Interfaces\RenderSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\MForge.Render2D.rd.xml" />
   </ItemGroup>

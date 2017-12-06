@@ -16,8 +16,13 @@ using Windows.UI.Xaml.Media;
 
 namespace MForge.Sequensor.UIControls
 {
+    public delegate void SceneDurationChangedEvent(IScene scene);
+
     public sealed class Sequensor : Control
     {
+        int borderSize = 40;
+
+        public SceneDurationChangedEvent DurationChanged { get; set; }
 
         IScene currentScene = null;
         SequenceController controller;
@@ -40,8 +45,7 @@ namespace MForge.Sequensor.UIControls
                 if (controller == null || currentScene == null)
                     return;
 
-#warning убрать хардкод
-                var frameScale = (e.NewSize.Width - 40) / currentScene.FrameDuration;
+                var frameScale = (e.NewSize.Width - borderSize) / currentScene.FrameDuration;
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             };
@@ -51,6 +55,23 @@ namespace MForge.Sequensor.UIControls
                 var item = e.Items.FirstOrDefault() as ISequence;
                 if (item != null)
                     e.Data.Properties.Add("Context", item);
+            };
+
+            items.DragOver += (sender, e) => {
+                e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+            };
+
+            items.Drop += (sender, e) => {
+                if (controller == null || currentScene == null)
+                    return;
+
+                var seq = new SequenceBase();
+                seq.Items.Add(new SequenceElementBase(currentScene));
+
+                var frameScale = (items.ActualWidth - 40) / currentScene.FrameDuration;
+                seq.UpdateScale(frameScale);
+
+                controller.Sequences.Add(seq);
             };
 
             Button btn = GetTemplateChild("AddButton") as Button;
@@ -76,7 +97,6 @@ namespace MForge.Sequensor.UIControls
 
                     controller.Sequences.Add(seq);
                 };
-
             }           
 
 
@@ -97,8 +117,7 @@ namespace MForge.Sequensor.UIControls
             if (items != null)
             {
                 items.ItemsSource = controller.Sequences;
-#warning убрать хардкод
-                var frameScale = (items.ActualWidth - 40) / scene.FrameDuration;
+                var frameScale = (items.ActualWidth - borderSize) / scene.FrameDuration;
                 foreach (var sequence in controller.Sequences)
                     sequence.UpdateScale(frameScale);
             }
@@ -112,11 +131,12 @@ namespace MForge.Sequensor.UIControls
         void SceneDurationChange(object sender, RangeBaseValueChangedEventArgs e)
         {
             if ( controller == null || currentScene == null || e.OldValue == (int)e.NewValue )
-                return;
+                return;            
 
             currentScene.FrameDuration = (int)e.NewValue;
-#warning убрать хардкод
-            var frameScale = (items.ActualWidth - 40) / currentScene.FrameDuration;
+            DurationChanged?.Invoke(currentScene);
+
+            var frameScale = (items.ActualWidth - borderSize) / currentScene.FrameDuration;
 
             foreach (var sequence in controller.Sequences)
                 sequence.UpdateScale(frameScale);

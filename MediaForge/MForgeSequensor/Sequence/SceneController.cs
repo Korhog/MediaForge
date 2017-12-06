@@ -17,6 +17,7 @@ namespace MForge.Sequensor.Sequence
         public SceneController()
         {
             scenes = new ObservableCollection<IScene>();
+            CreateScene();
         }
 
         /// <summary> Создаем новую сцену </summary>

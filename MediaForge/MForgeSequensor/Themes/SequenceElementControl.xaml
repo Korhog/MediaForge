@@ -11,20 +11,24 @@
                             ManipulationMode="TranslateX"
                             Orientation="Horizontal">
                         <Border 
-                                Background="Transparent" 
-                                Height="35" 
+                                BorderBrush="#16FF9E"
+                                BorderThickness="2,2,0,2"
+                                Background="#7D16FF9E" 
+                                Margin="-20, 0, 0, 0"
                                 Width="20" 
                                 Name="PART_LEFT_BTN" 
-                                Margin="-20, 0, 0, 0">
+                                >
                             <FontIcon FontSize="10" Foreground="White" Glyph="&#xE00E;"/>
                         </Border>
                         <Border
+                                Height="40" 
                                 Name="Border"
                                 HorizontalAlignment="Left"
-                                ManipulationMode="TranslateX"                        
-                                Width="80"
-                                Height="35"
-                                Background="Gold">
+                                ManipulationMode="TranslateX"  
+                                Background="#1D16FF9E"
+                                BorderBrush="#7D16FF9E"
+                                BorderThickness="0,2,0,2"
+                                Width="80" >
                             <TextBlock 
                                 FontSize="12"
                                 Margin="2"
@@ -33,13 +37,13 @@
                                 Text="Image"/>
                         </Border>
                         <Border 
-                                Background="Transparent"
-                                Height="35" 
+                                Margin="0, 0, -20, 0"
+                                BorderBrush="#16FF9E"
+                                BorderThickness="0,2,2,2"
+                                Background="#7D16FF9E" 
                                 Width="20"
-                                Name="PART_RIGHT_BTN" 
-                                Margin="0, 0, -20, 0">
+                                Name="PART_RIGHT_BTN" >
                             <FontIcon FontSize="10" Foreground="White" Glyph="&#xE00F;"/>
-
                         </Border>
                     </StackPanel>
 
