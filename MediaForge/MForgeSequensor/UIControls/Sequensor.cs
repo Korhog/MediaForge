@@ -72,34 +72,7 @@ namespace MForge.Sequensor.UIControls
                 seq.UpdateScale(frameScale);
 
                 controller.Sequences.Add(seq);
-            };
-
-            Button btn = GetTemplateChild("AddButton") as Button;
-            MenuFlyout menu = btn.Flyout as MenuFlyout;
-
-            foreach (var item in menu.Items)
-            {
-                item.Tapped += (sender, e) =>
-                {
-                    if ((sender as MenuFlyoutItem)?.Text == "Shape")
-                    {
-                        return;
-                    }
-
-                    if (controller == null || currentScene == null)
-                        return;
-
-                    var seq = new SequenceBase();
-                    seq.Items.Add(new SequenceElementBase(currentScene));
-
-                    var frameScale = (items.ActualWidth - 40) / currentScene.FrameDuration;
-                    seq.UpdateScale(frameScale);
-
-                    controller.Sequences.Add(seq);
-                };
-            }           
-
-
+            }; 
             // Получаем слайдер 
             slider = GetTemplateChild("DurationSlider") as Slider;
             slider.ValueChanged += SceneDurationChange;
